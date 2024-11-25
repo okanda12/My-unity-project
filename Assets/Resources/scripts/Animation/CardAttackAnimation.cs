@@ -2,11 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 
 public class CardAttackAnimation : MonoBehaviour
 {
-    
+
+    public CardView View;
+    public CardModel Model;
+
     //public Transform targetTransform;//ターゲット
 
     public float AttackDurationGO;//行きの時間
@@ -16,16 +20,77 @@ public class CardAttackAnimation : MonoBehaviour
 
     private Transform rectTransform;
 
+    public GameObject Attackedtext;//攻撃されたとき,したときにぽわわ～んとなるやつ
+    public float AttackedDuration;//の時間
+
+
 
     private void Awake()
     {
         rectTransform = this.GetComponent<RectTransform>();
+       
+
 
     }
 
    
 
+    //ダメージを入れればハートのところにぽわわ～んて出る
+    public IEnumerator GetDamage(int damage)
+    {
+        
 
+
+        Transform HeartPosition = transform.Find("Heart");//ハートの位置から飛ばす
+
+        Vector3 startPosition = HeartPosition.position;
+        Vector3 endPosition =startPosition + new Vector3(0, 0.1f, 0);
+
+
+        TextMeshProUGUI Damagetext = Attackedtext.GetComponentInChildren<TextMeshProUGUI>();
+
+
+        Damagetext.text = damage.ToString();
+
+        GameObject Damagetextobject = Instantiate(Attackedtext, HeartPosition, false);
+
+
+        float elapsedTime = 0f;
+
+        while (elapsedTime <AttackedDuration )
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / AttackedDuration;
+            Damagetextobject.transform.position = Vector3.Lerp(startPosition, endPosition, t * t);
+
+            yield return null;
+        }
+        Destroy(Damagetextobject);//消す
+
+
+        Model = GetComponent<CardController>().model;
+        View = GetComponent<CardController>().view;
+
+        Model.hp -= damage;
+        if (Model.hp <= 0)
+        {
+            Die();
+
+        }
+        View.Show(Model);
+
+        
+
+    }
+
+
+    /// <summary>
+    //ころしますよ！
+    /// </summary>
+    public void Die()
+    {
+        Destroy(gameObject);
+    }
     //}
 
 
@@ -87,9 +152,12 @@ public class CardAttackAnimation : MonoBehaviour
 
     //攻撃モーションです.自分の位置(from)から相手の位置(target)へ行って戻ります
 
-    public IEnumerator AttackAnim(Transform from,Transform target)
+    public IEnumerator AttackAnim(CardController fromCard,CardController targetCard)
     {
-        
+        Transform from = this.transform;
+        Transform target = targetCard.transform;
+
+
         float elapsedTime = 0f;
 
 
@@ -120,6 +188,14 @@ public class CardAttackAnimation : MonoBehaviour
         }
 
 
+        //ここでダメージアニメーションを二個入れています
+        CardAttackAnimation targetAnim = targetCard.GetComponent<CardAttackAnimation>();//無理やり持ってきてる
+        StartCoroutine(targetAnim.GetDamage(fromCard.model.at));//相手に受けさせたい
+        StartCoroutine(GetDamage(targetCard.model.at));//自分が受ける
+
+        yield return new WaitForSeconds(0.3f);//なんかこれじゅうようやね
+
+
         elapsedTime = 0f;
 
         while (elapsedTime < AttackDurationBack)
@@ -143,7 +219,7 @@ public class CardAttackAnimation : MonoBehaviour
 
         IgnoreLayout(from,false);
 
-        yield return new WaitForSeconds(AttackDurationGO+AttackDurationBack);
+        //yield return new WaitForSeconds(AttackDurationGO+AttackDurationBack);
 
 
     }

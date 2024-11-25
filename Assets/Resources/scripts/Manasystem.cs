@@ -62,7 +62,7 @@ public class Manasystem : MonoBehaviour
 
         int childCount = costFrame.childCount;
 
-        Debug.Log($"childCount{childCount}");
+        //Debug.Log($"childCount{childCount}");
         for (int i = 0; i < childCount; i++)
         {
             Transform manaCrystal = costFrame.GetChild(i);
@@ -75,7 +75,7 @@ public class Manasystem : MonoBehaviour
                 animator.SetBool("create",true);
                 animator.SetBool("used", false);
                 //animator.SetBool("shining", true);
-                Debug.LogWarning($"create trigger! ");
+                Debug.LogWarning($"MANA create trigger! ");
             }
             else
             {
@@ -183,8 +183,8 @@ public class Manasystem : MonoBehaviour
             Transform manaCrystal = costFrame.GetChild(childCount - i - 1);
             Animator animator = manaCrystal.GetComponent<Animator>();
 
-            Debug.Log($"getbool {animator.GetBool("create")}");
-            Debug.Log($"childcountis{childCount}");
+            //Debug.Log($"getbool {animator.GetBool("create")}");
+            //Debug.Log($"childcountis{childCount}");
 
             //アニメータを取得しトリガーを設定
 
@@ -199,11 +199,11 @@ public class Manasystem : MonoBehaviour
                 //animator.SetBool("shining", false);//使えないマナとなる.
 
 
-                Debug.LogWarning($"used trigger! ");
+                //Debug.LogWarning($"used trigger! ");
             }
             else
             {
-                Debug.LogWarning($"Animator not found on ManaCrystal: {manaCrystal.name}");
+                //Debug.Log($"Animator not found on ManaCrystal: {manaCrystal.name}");
             }
 
             i++;

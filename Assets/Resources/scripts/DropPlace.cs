@@ -17,8 +17,8 @@ public class DropPlace : MonoBehaviour, IDropHandler
 
 
         CardMovement card = eventData.pointerDrag.GetComponent<CardMovement>();
-        CardController cardcon = eventData.pointerDrag.GetComponent<CardController>();
-        CardCastAnimation castAnim = card.GetComponent<CardCastAnimation>();
+        
+        
         // Debug.Log(card.defaultParent);
 
 
@@ -33,8 +33,8 @@ public class DropPlace : MonoBehaviour, IDropHandler
             //Debug.Log($"Card Dropped: {model.name}, AT: {model.at}, HP: {model.hp}, Cost: {model.cost}");
             if (model.cost > GameManager.Instance.Player_Mana || card.defaultParent == this.transform)
             {
-                //Debug.Log(this.transform);
-                Debug.Log("youcan't play this card!!");
+                //êeÇhandÇ…ÇµÇΩÇ‹Ç‹ï‘Ç∑
+               
                 return;
             }
             else
@@ -42,32 +42,11 @@ public class DropPlace : MonoBehaviour, IDropHandler
 
 
 
-                StartCoroutine(castAnim.MinionCast());
+                //êeÇÇ±ÇÍÇ…ÇµÇƒï‘Ç∑
                 card.defaultParent = this.transform;
 
                 
-                GameManager.Instance.manasys.UseMana(model.cost);
-
-                if (model.cardType=="Magic")
-                {//source target
-
-                    
-                    model.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
-                    cardcon.Die();//îjâÛÇ∑ÇÈ
-                }
-                else
-                {
-                    
-                    model.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
-
-
-
-                }
-
-                //å¯â égÇ§
                 
-
-
 
 
             }

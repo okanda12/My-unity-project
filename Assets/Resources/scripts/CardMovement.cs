@@ -11,12 +11,11 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     //ドラッグ可能かどうかのフラグ
 
 
-
-
+    
     //おそらく最初はHandになってる？
     public Transform defaultParent;
     public CardModel cardModel;
-    
+    CardController cardcon;
 
     private Canvas canvas;
     private CanvasGroup canvasGroup;
@@ -28,7 +27,9 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
+
         canvasGroup = GetComponent<CanvasGroup>();
+        cardcon = this.GetComponent<CardController>();
 
         if (canvas != null)
         {
@@ -89,9 +90,53 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     {
         if (!isDraggable) return;
         //プレイヤーのカードでなければドラッグ不可
-        
+
+
+        CardCastAnimation castAnim = this.GetComponent<CardCastAnimation>();
+
+
+        if (cardModel.cost>GameManager.Instance.Player_Mana )
+        {
+            Debug.Log("youcan't play this card!!");
+            StartCoroutine(castAnim.cantMinionCast(defaultParent));
+
+
+        }
+        else//カードが出せるとき
+        {
+        //defaultParentがDropplaceになってます
+            
+            StartCoroutine(castAnim.MinionCast(defaultParent));
+
+            GameManager.Instance.manasys.UseMana(cardModel.cost);
+
+
+
+            if (cardModel.cardType == "Magic")
+            {//source target
+
+
+                cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
+                cardcon.Die();//破壊する
+            }
+            else
+            {
+
+                cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
+
+
+
+            }
+
+
+        }
+
+
+
+
+
         //カードを話した時に行う処理　元の親に戻す
-        transform.SetParent(defaultParent, false);
+        //transform.SetParent(defaultParent, false);
 
         //描画順序を元に戻す
         if (canvas != null)

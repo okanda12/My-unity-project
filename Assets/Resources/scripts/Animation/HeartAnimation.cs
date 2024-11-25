@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+using TMPro;
+
 public class HeartAnimation : MonoBehaviour
 {
     public GameObject heartPrefab; //ハートのプレファブ
@@ -9,15 +11,47 @@ public class HeartAnimation : MonoBehaviour
     public float animationDuration ; //アニメーションの継続時間
     public float radius ;//ハートが飛ぶ半径
 
+    public GameObject hearttextprefab;//ハート位置にぽわわーんてなるやつ
+    public float hearttextDuration;//ぽわわーん時間
+
     //回復アニメーションであります
 
-    public void PlayHealingAnimation(Transform targetTransform)
+    public void PlayHealingAnimation(Transform targetTransform,int healAmount)
     {
-        StartCoroutine(HealingAnimation(targetTransform));
+        StartCoroutine(HealingAnimation(targetTransform,healAmount));
     }
 
-    private IEnumerator HealingAnimation(Transform targetTransform)
+    private IEnumerator HealingAnimation(Transform targetTransform, int healAmount)
     {
+        
+        float elapsedTime = 0f;
+        Transform HeartPosition = transform.Find("Heart");//ハートの位置から飛ばす
+        
+        Vector3 startPosition = HeartPosition.position;
+        Vector3 endPosition = startPosition + new Vector3(0, 0.1f, 0); 
+
+        TextMeshProUGUI hearttext = hearttextprefab.GetComponentInChildren<TextMeshProUGUI>();
+        //子オブジェクトから探す
+
+        hearttext.text = healAmount.ToString();
+
+        GameObject hearttextobject=Instantiate(hearttextprefab,HeartPosition,false);
+
+
+
+
+        while (elapsedTime<hearttextDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / hearttextDuration;
+            hearttextobject.transform.position = Vector3.Lerp(startPosition, endPosition, t * t);
+
+            yield return null;
+        }
+
+        Destroy(hearttextobject);
+
+
 
         //GameObject heart1 = Instantiate(heartPrefab, targetTransform.position, Quaternion.identity,targetTransform);
         for (int i=0;i<heartCount;i++)
@@ -37,6 +71,9 @@ public class HeartAnimation : MonoBehaviour
             //ちょっと待って次のハートを動かす
         
         }
+
+
+        
     }
 
 
@@ -64,9 +101,7 @@ public class HeartAnimation : MonoBehaviour
 
             yield return null;
         }
-        //最後のradiusを出力
-        ;
-
+        
 
         Destroy(heart.gameObject);
 

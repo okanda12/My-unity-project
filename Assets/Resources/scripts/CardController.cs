@@ -62,43 +62,38 @@ public class CardController : MonoBehaviour, IPointerClickHandler
 
     public void Attack(CardController targetCard)
     {
-        Transform from = this.GetComponent<Transform>();
-        Transform target = targetCard.GetComponent<Transform>();
+        Transform from = this.transform;
+        Transform target = targetCard.transform;
 
+        //int hi = targetCard.model.hp;
 
         CardAttackAnimation cardAnim = this.GetComponent<CardAttackAnimation>();
         if (targetCard !=null)
         {
             
-            StartCoroutine(cardAnim.AttackAnim(from,target));
+            StartCoroutine(cardAnim.AttackAnim(this,targetCard));
 
-            targetCard.TakeDamage(model.at);
+
+
+            
+            //targetCard.TakeDamage(model.at);//Ç±ÇÃÉJÅ[ÉhÇÃçUåÇóÕÇó^Ç¶ÇÈ
             
 
         }
     }
-    public void TakeDamage(int damage)
-    {
-        model.hp -= damage;
-        if (model.hp<=0)
-        {
-            Die();
-
-        }
-        view.Show(model);
-
-    }
-
-
-
     public void Die()
     {
         Destroy(gameObject);
     }
 
-    
 
 
 
-    
+
+
+
+
+
+
+
 }

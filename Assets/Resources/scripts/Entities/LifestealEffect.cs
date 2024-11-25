@@ -19,7 +19,7 @@ public class LifestealEffect : MinionEffect
         HeartAnimation animManager = target.GetComponent<HeartAnimation>();
         if (animManager != null)
         {
-            animManager.PlayHealingAnimation(target.transform);
+            animManager.PlayHealingAnimation(target.transform,healAmount);
         }
 
 
