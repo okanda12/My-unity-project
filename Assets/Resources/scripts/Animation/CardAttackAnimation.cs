@@ -23,15 +23,13 @@ public class CardAttackAnimation : MonoBehaviour
 
     }
 
-    //public IEnumerator CantAttackAnim(Transform from)
-    //{
-    //  float elapsedTime = 0f;
-
-
+   
 
 
     //}
 
+
+    //カードに動きをつけるため,Horizontal Layoutを一瞬だけ無効にします.
     public void IgnoreLayout(Transform from,  bool ignore)
     {
         LayoutElement layoutElement = from.GetComponent<LayoutElement>();
@@ -42,7 +40,7 @@ public class CardAttackAnimation : MonoBehaviour
         }
     }
 
-
+    //攻撃できないとき,ブルブル震えます.
     public IEnumerator CantAttack(Transform from)
     {
         float elapsedTime = 0f;
@@ -87,6 +85,7 @@ public class CardAttackAnimation : MonoBehaviour
 
 
 
+    //攻撃モーションです.自分の位置(from)から相手の位置(target)へ行って戻ります
 
     public IEnumerator AttackAnim(Transform from,Transform target)
     {
@@ -103,8 +102,8 @@ public class CardAttackAnimation : MonoBehaviour
 
 
         //identityEuler(0, 0, -45)
-        Quaternion startRotation = Quaternion.identity;
-        Quaternion endRotation = Quaternion.Euler(0,0,-45);//これは無回転
+        Quaternion startRotation = Quaternion.identity;//これは無回転
+        Quaternion endRotation = Quaternion.Euler(0,0,-45);
 
         while (elapsedTime <AttackDurationGO)
         {

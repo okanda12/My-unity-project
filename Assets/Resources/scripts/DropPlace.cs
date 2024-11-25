@@ -18,6 +18,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
 
         CardMovement card = eventData.pointerDrag.GetComponent<CardMovement>();
         CardController cardcon = eventData.pointerDrag.GetComponent<CardController>();
+        CardCastAnimation castAnim = card.GetComponent<CardCastAnimation>();
         // Debug.Log(card.defaultParent);
 
 
@@ -38,7 +39,10 @@ public class DropPlace : MonoBehaviour, IDropHandler
             }
             else
             {//カードが出せるとき
-                
+
+
+
+                StartCoroutine(castAnim.MinionCast());
                 card.defaultParent = this.transform;
 
                 
@@ -55,6 +59,9 @@ public class DropPlace : MonoBehaviour, IDropHandler
                 {
                     
                     model.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
+
+
+
                 }
 
                 //効果使う
