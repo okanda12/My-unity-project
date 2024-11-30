@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 0d806e685c5808e4e82fc92dea577e83
+guid: c6ce69b320ff3894fa088554c389825f
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,64 +110,127 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: HeartAttack_0
+      name: devices_0
       rect:
         serializedVersion: 2
-        x: 12
-        y: 36
-        width: 68
-        height: 56
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 0
+        y: 603
+        width: 193
+        height: 197
+      alignment: 9
+      pivot: {x: 0.47460437, y: 0.51640666}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a2cdc29e26ba9a740a04fae3520376ab
-      internalID: 1539729477
+      spriteID: b7ee142143e2b5846aafe7a88b584341
+      internalID: 769987373
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HeartAttack_1
+      name: devices_1
       rect:
         serializedVersion: 2
-        x: 108
-        y: 32
-        width: 60
-        height: 64
-      alignment: 0
-      pivot: {x: 0, y: 0}
+        x: 193
+        y: 604
+        width: 203
+        height: 196
+      alignment: 9
+      pivot: {x: 0.5059795, y: 0.5091522}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 848329ad3091b1743a564a52a88647bc
-      internalID: -1770253418
+      spriteID: ec6bc0d9eff4a2245818f52f4f9d58cf
+      internalID: -1333085187
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: HeartAttack_2
+      name: devices_2
       rect:
         serializedVersion: 2
-        x: 200
-        y: 36
-        width: 60
-        height: 60
+        x: 430
+        y: 603
+        width: 201
+        height: 197
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: afe9ef7c7f2d9dd4baf61e78fe5b086f
-      internalID: -1924686515
+      spriteID: 69c75ef444cec764191dccaba567ec38
+      internalID: 671964285
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: devices_3
+      rect:
+        serializedVersion: 2
+        x: 0
+        y: 384
+        width: 201
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: f5e12bf382c895c49860fa2e8c41b2ee
+      internalID: 1588272246
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: devices_4
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 384
+        width: 196
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 29a7257ad2232f54c96424ec36b07caf
+      internalID: 686499896
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: devices_5
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 369
+        width: 200
+        height: 200
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: dd35142e158356a47a129860a9b66616
+      internalID: -1433535815
       vertices: []
       indices: 
       edges: []
@@ -183,9 +246,12 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      HeartAttack_0: 1539729477
-      HeartAttack_1: -1770253418
-      HeartAttack_2: -1924686515
+      devices_0: 769987373
+      devices_1: -1333085187
+      devices_2: 671964285
+      devices_3: 1588272246
+      devices_4: 686499896
+      devices_5: -1433535815
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

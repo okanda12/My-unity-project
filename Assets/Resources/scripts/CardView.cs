@@ -10,6 +10,7 @@ public class CardView : MonoBehaviour
     [SerializeField] TextMeshProUGUI nameText, hpText, atText, cosText;
     [SerializeField] Image iconImage;
     [SerializeField] Image waku;
+    [SerializeField] Image Dot;
     [SerializeField] Frames frame;
 
 
@@ -22,6 +23,7 @@ public class CardView : MonoBehaviour
             nameText.text = null;
             hpText.text = cardModel.hp.ToString();
             atText.text = cardModel.at.ToString();
+            Dot.enabled = false;
             cosText.text = null;
             iconImage.sprite = cardModel.icon;
             waku.sprite = frame.Heroframe;

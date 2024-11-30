@@ -101,10 +101,21 @@ public class CardCastAnimation : MonoBehaviour
     {
         float elapsedTime = 0f;
         Vector3 EndPosition=defaultParent.position;
+        Vector3 StartPosition;
 
 
         //マウスの位置はワールド座標なのでローカルに変える必要がある．
-        Vector3 StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);//マウスの位置を取得します
+        if (GameManager.Instance.isPlayerTurn==true)
+        {
+            StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);//マウスの位置を取得します
+
+        }
+        else
+        {
+
+            StartPosition = GameManager.Instance.EnemyFieldTransform.transform.position;
+
+        }
 
         //Debug.Log($"Start={StartPosition}");
 

@@ -89,50 +89,63 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnEndDrag(PointerEventData eventData)
     {
         if (!isDraggable) return;
-        //プレイヤーのカードでなければドラッグ不可
-
-
         CardCastAnimation castAnim = this.GetComponent<CardCastAnimation>();
 
-
-        if (cardModel.cost>GameManager.Instance.Player_Mana )
+        if (GameManager.Instance.isPlayerTurn == false) 
         {
-            Debug.Log("youcan't play this card!!");
             StartCoroutine(castAnim.cantMinionCast(defaultParent));
-
-
+            Debug.Log("youcan't play in Enemy Turn!!!");
         }
-        else//カードが出せるとき
+        else
         {
-        //defaultParentがDropplaceになってます
-            
-            StartCoroutine(castAnim.MinionCast(defaultParent));
-
-            GameManager.Instance.manasys.UseMana(cardModel.cost);
+            //プレイヤーのカードでなければドラッグ不可
 
 
 
-            if (cardModel.cardType == "Magic")
-            {//source target
 
 
-                cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
-                cardcon.Die();//破壊する
-            }
-            else
+            if (cardModel.cost > GameManager.Instance.Player_Mana)
             {
+                Debug.Log("youcan't play this card!!");
+                StartCoroutine(castAnim.cantMinionCast(defaultParent));
 
-                cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
 
+            }
+            else//カードが出せるとき
+            {
+                //defaultParentがDropplaceになってます
+
+                StartCoroutine(castAnim.MinionCast(defaultParent));
+
+
+
+
+                GameManager.Instance.manasys.UseMana(cardModel.cost);
+                cardcon.ARMA(cardModel.cost);//アルマデバイスにコスト分追加する
+
+
+
+                if (cardModel.cardType == "Magic")
+                {//source target
+
+
+                    cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
+                    cardcon.Die();//破壊する
+                }
+                else
+                {
+
+                    cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
+
+
+
+                }
 
 
             }
 
 
         }
-
-
-
 
 
         //カードを話した時に行う処理　元の親に戻す

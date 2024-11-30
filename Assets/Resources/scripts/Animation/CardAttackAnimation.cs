@@ -61,23 +61,34 @@ public class CardAttackAnimation : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / AttackedDuration;
-            Damagetextobject.transform.position = Vector3.Lerp(startPosition, endPosition, t * t);
+
+            if (Damagetextobject != null)
+            {
+                Damagetextobject.transform.position = Vector3.Lerp(startPosition, endPosition, t * t);
+            }
 
             yield return null;
+            
+            
         }
         Destroy(Damagetextobject);//消す
 
-
-        Model = GetComponent<CardController>().model;
-        View = GetComponent<CardController>().view;
-
-        Model.hp -= damage;
-        if (Model.hp <= 0)
+        if (this != null)
         {
-            Die();
+            Model = GetComponent<CardController>().model;
+            View = GetComponent<CardController>().view;
+            Model.hp -= damage;
+            if (Model.hp <= 0)
+            {
+                Die();
 
+            }
+            View.Show(Model);
         }
-        View.Show(Model);
+
+            
+
+        
 
         
 
@@ -173,6 +184,8 @@ public class CardAttackAnimation : MonoBehaviour
         Quaternion startRotation = Quaternion.identity;//これは無回転
         Quaternion endRotation = Quaternion.Euler(0,0,-45);
 
+
+        //アタック行き
         while (elapsedTime <AttackDurationGO)
         {
             elapsedTime += Time.deltaTime;
@@ -188,14 +201,20 @@ public class CardAttackAnimation : MonoBehaviour
         }
 
 
+        //アタック途中
+
         //ここでダメージアニメーションを二個入れています
         CardAttackAnimation targetAnim = targetCard.GetComponent<CardAttackAnimation>();//無理やり持ってきてる
+        
+        
         StartCoroutine(targetAnim.GetDamage(fromCard.model.at));//相手に受けさせたい
         StartCoroutine(GetDamage(targetCard.model.at));//自分が受ける
 
-        yield return new WaitForSeconds(0.3f);//なんかこれじゅうようやね
+        yield return new WaitForSeconds(0.2f);//なんかこれじゅうようやね
 
 
+
+        //アタック帰り
         elapsedTime = 0f;
 
         while (elapsedTime < AttackDurationBack)
@@ -220,7 +239,7 @@ public class CardAttackAnimation : MonoBehaviour
         IgnoreLayout(from,false);
 
         //yield return new WaitForSeconds(AttackDurationGO+AttackDurationBack);
-
+        fromCard.canAttack = false;
 
     }
 }

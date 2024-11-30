@@ -8,7 +8,7 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     //MVCパターン
 
     public bool canAttack = true;
-
+    private ARMAdevice ARMAdevice;
 
     //カードデータを表示する
     public CardView view;
@@ -22,14 +22,18 @@ public class CardController : MonoBehaviour, IPointerClickHandler
     {
         view = GetComponent<CardView>();
         movement = GetComponent<CardMovement>();
+        ARMAdevice = FindObjectOfType<ARMAdevice>();
+
     }
     public void Init(ICard cardEntity)
     {
         model = new CardModel(cardEntity, cardEntity.minioneffect);
         view.Show(model);
         movement.cardModel = model;//CardMovementにCardmodelを渡す
- 
-    
+
+        
+
+
     }
 
     public void OnPointerClick(PointerEventData eventData)
@@ -86,6 +90,17 @@ public class CardController : MonoBehaviour, IPointerClickHandler
         Destroy(gameObject);
     }
 
+    public void ARMA(int cost)
+    {
+        if (ARMAdevice != null)
+        {
+            ARMAdevice.AddCost(cost);
+        }
+
+
+
+
+    }
 
 
 

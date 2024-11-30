@@ -40,13 +40,21 @@ public class GameManager : MonoBehaviour
 
 
 
+    //特殊デバイス
+    private RAIKAdevice RAIKAdevice;
+
+
     public CardController selectedCard;//現在選択されているカード
     public List<CardController> enemyCards;//敵カードのリスト
 
     public CardController PlayerHerocon;
     public CardController EnemyHerocon;
 
-    
+
+    //敵のターン,以下2つのフラッグがtrueになったらターン終了
+    private bool EMcastflag = false;//キャストできるカードがないとtrue;
+    private bool EMatackflag = false; //アタックできるカードが無いとtrue;
+
 
 
 
@@ -100,7 +108,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SettingHand());
         manasys.InitializeMana(0);
 
-
+        RAIKAdevice=FindObjectOfType<RAIKAdevice>();
     }
 
 
@@ -172,7 +180,7 @@ public class GameManager : MonoBehaviour
                 //既にカードが選ばれている場合はターゲット選択
                 AttackTarget(selectedCard, card);//攻撃者　守備者の順
                 Debug.Log("被攻撃者カード選択:" + card.model.name);
-                selectedCard.canAttack = false;
+                
                 selectedCard = null;//攻撃後は選択を解除
 
                 EnemyFieldHighlight(false);//ハイライトを消します
@@ -195,16 +203,14 @@ public class GameManager : MonoBehaviour
 
     public void AttackTarget(CardController attacker,CardController target)
     {
-        Transform targetparent = target.transform.parent;
+        //Transform targetparent = target.transform.parent;
         //ターゲットが敵カードであれば攻撃する
-        if (targetparent == EnemyFieldTransform || targetparent == EnemyHEROfield)
-        {
+        //if (targetparent == EnemyFieldTransform || targetparent == EnemyHEROfield)
+        //{
             attacker.Attack(target);//攻撃メソッド呼び出し
 
-
-
             Debug.Log($"{attacker.model.name}が{target.model.name}を攻撃しました");
-        }
+        // }
 
     }
 
@@ -265,7 +271,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            EnemyTurn();
+            StartCoroutine(EnemyTurn());
         }
     }
 
@@ -289,21 +295,192 @@ public class GameManager : MonoBehaviour
 
     }
 
-    void EnemyTurn()
+
+
+
+
+
+
+    //敵のキャストセクション
+    public IEnumerator EnemyCast()
     {
+        Debug.Log("Enemycast!");
+
+        CardController[] EMhandCC = EnemyHandTransform.GetComponentsInChildren<CardController>();//ハンドのカードコントローラ
+        CardController[] EMfieldCC = EnemyFieldTransform.GetComponentsInChildren<CardController>();//フィールドのコントローラー
+
+
+        if (EMhandCC.Length == 0)
+        {
+            EMcastflag = true;
+            Debug.Log("EMhandCC is empty");
+            yield return new WaitForSeconds(0.5f);
+            yield break; // コルーチンを終了
+        }
+
+        int maxIterations = EMhandCC.Length; // 無限ループ防止
+        int iterationCount = 0;
+
+
+
+
+        while (iterationCount < maxIterations)
+        {
+            bool cardCasted = false;
+
+            foreach (CardController card in EMhandCC)
+            {
+                if (card.model.cost <= Enemy_Mana && EMfieldCC.Length < 5)
+                {
+                    CardCastAnimation castAnim = card.GetComponent<CardCastAnimation>();
+                    GameManager.Instance.manasys.UseMana(card.model.cost);
+                    StartCoroutine(castAnim.MinionCast(EnemyFieldTransform));
+                    cardCasted = true;
+
+
+                    yield return new WaitForSeconds(0.5f);
+                    break; // foreach を抜ける
+
+
+                }
+            }
+
+            // 手札・フィールドを更新
+            EMhandCC = EnemyHandTransform.GetComponentsInChildren<CardController>();
+            EMfieldCC = EnemyFieldTransform.GetComponentsInChildren<CardController>();
+
+            // 出せるカードがなくなったら終了
+            if (!cardCasted) break;
+
+            iterationCount++;
+        }
+        yield return new WaitForSeconds(0.1f);
+        EMcastflag = true;
+
+
+
+    }
+
+
+    //敵の攻撃命令です
+    public IEnumerator EnemyAttack()
+    {
+        Debug.Log("EnemyAttack!");
+        bool canatEMfield = true;//何か攻撃できるカードがいるとき
+        
+
+        while (canatEMfield != false)
+        {
+            canatEMfield = false;
+
+            CardController[] EMfieldCC = EnemyFieldTransform.GetComponentsInChildren<CardController>();//フィールドのコントローラー
+            CardController[] PLfieldCC = PlayerFieldTransform.GetComponentsInChildren<CardController>();//プレイヤーフィールド
+
+
+            if (EMfieldCC.Length == 0) yield break;
+
+
+            if (EMfieldCC !=null)
+            {
+                foreach (CardController card in EMfieldCC)
+                {
+                    EMfieldCC = EnemyFieldTransform.GetComponentsInChildren<CardController>();//フィールドのコントローラー
+                    PLfieldCC = PlayerFieldTransform.GetComponentsInChildren<CardController>();//プレイヤーフィールド
+
+
+                    if (card.canAttack == true)
+                    {
+                        Debug.Log($"PLfieldCC{PLfieldCC},PLfieldCC.length{PLfieldCC.Length}");
+                        if (PLfieldCC.Length > 0)
+                        {
+                            CardController EnemyCard = PLfieldCC[0];//いちばん端っこの敵(味方)を攻撃
+                            AttackTarget(card, EnemyCard);
+
+                            yield return new WaitForSeconds(0.1f);
+
+
+                        }
+                        else
+                        {
+                            CardController player=PlayerHEROfield.GetComponentInChildren<CardController>();//ヒーろーを攻撃
+                            AttackTarget(card, player);
+
+                            yield return new WaitForSeconds(0.1f);
+                        }
+                        break;
+                    }
+
+                    
+                }
+               
+            }
+            canatEMfield = false;
+
+            yield return new WaitForSeconds(0.2f);
+
+        }
+
+        //yield return new WaitForSeconds(0.5f);
+
+        EMatackflag = true;
+
+    }
+
+
+
+    public IEnumerator EnemyTurn()
+    {
+
+        yield return new WaitForSeconds(1f);
         //エネミーターンの処理
         Debug.Log("敵のターンです");
         manasys.AddMana(1);
         manasys.AddmaxMana(1);
         manasys.RestoreMana(EnemyCostframe);
         //EnemyHandtransform からcardcontrollerを持つ子オブジェクトを検索
-        CardController[] cardList= EnemyHandTransform.GetComponentsInChildren<CardController>();
-        //場に出すカードを選択
-        CardController card = cardList[0];
-        //カードを移動する
-        card.movement.SetCardTransform(EnemyFieldTransform);
+
+
+        CardController[] EnemyFieldcardList = EnemyFieldTransform.GetComponentsInChildren<CardController>();
+
+
+        //攻撃フラッグを初期化する
+        foreach (var card in EnemyFieldcardList)
+        {
+            card.canAttack = true;
+
+        }
+
+
+        int maxiteration = 5;
+        int iteration = 0;
+        // EMatackflag =false //攻撃不可能ならtrueに
+        // EMcastflag =false　//キャスト不可能ならtrueに
+        while (iteration<maxiteration )
+        {
+
+            yield return StartCoroutine(EnemyCast());//キャスト出来るカードをキャストする処理
+            yield return StartCoroutine(EnemyAttack());//攻撃できるカードで攻撃する処理
+            iteration += 1;
+            Debug.Log($"iteration{iteration}");
+        }
+
+        EMatackflag = false;//全て初期の状態に戻す現状使ってないけど,後で使うかも
+        EMcastflag = false;
+
+
+
+         
+
+        
+
         //ターンを終了する
+        yield return new WaitForSeconds(1f);
+        
+
         ChangeTurn();
+
+        
+
     }
 
     public void ChangeTurn()
@@ -318,6 +495,7 @@ public class GameManager : MonoBehaviour
             {
                 ICard playerCardEntity = playerDeck.DrawCard();
                 CreateHand(PlayerHandTransform, playerCardEntity);
+
                 
             }
             else
@@ -325,8 +503,11 @@ public class GameManager : MonoBehaviour
                 Debug.Log("player cant draw!!");
             }
             //ドローする
-            
-            
+
+            //ライカデバイス発動
+            RAIKAdevice.OnTurnStart();
+
+
 
         }
         else
@@ -342,9 +523,10 @@ public class GameManager : MonoBehaviour
             {
                 Debug.Log("Enemy cant draw!!");
             }
+            //ライカデバイス発動
+            
 
-            
-            
+
         }
         TurnCalc();
     }

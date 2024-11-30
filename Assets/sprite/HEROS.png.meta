@@ -117,7 +117,7 @@ TextureImporter:
         y: 8
         width: 46
         height: 85
-      alignment: 9
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
@@ -137,8 +137,8 @@ TextureImporter:
         x: 72
         y: 9
         width: 50
-        height: 84
-      alignment: 9
+        height: 80
+      alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
@@ -147,6 +147,48 @@ TextureImporter:
       bones: []
       spriteID: 64e3f63d1960063469886ab48aed5d08
       internalID: -1026947863
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HEROS_2
+      rect:
+        serializedVersion: 2
+        x: 143
+        y: 7
+        width: 46
+        height: 85
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8bb59e2d98e65624e9ab4afeb58a43ba
+      internalID: -1390467204
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: HEROS_3
+      rect:
+        serializedVersion: 2
+        x: 206
+        y: 8
+        width: 50
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b0a3b1e51080d00448b1d0c043b85232
+      internalID: -627078210
       vertices: []
       indices: 
       edges: []
@@ -164,6 +206,8 @@ TextureImporter:
     nameFileIdTable:
       HEROS_0: -1659368499
       HEROS_1: -1026947863
+      HEROS_2: -1390467204
+      HEROS_3: -627078210
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
