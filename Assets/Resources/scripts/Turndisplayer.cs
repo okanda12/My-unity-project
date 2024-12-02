@@ -13,10 +13,10 @@ public class Turndisplayer : MonoBehaviour
 
     private void Update()
     {
-        if (GameManager.Instance != null)
+        if (BattleManager.Instance != null)
         {
             // isPlayerTurn ‚Ìó‘Ô‚É‰‚¶‚Ä Text ‚ğXV
-            if (GameManager.Instance.isPlayerTurn)
+            if (BattleManager.Instance.isPlayerTurn)
             {
                 turnText.text = "Your Turn";
                 EnableButton(true);

@@ -34,28 +34,30 @@ public class CardCastAnimation : MonoBehaviour
     {
         float elapsedTime = 0f;
         Vector3 EndPosition;
-        
-        
+        Vector3 StartPosition;//マウスの位置を取得します
+
+
         //マウスの位置はワールド座標なのでローカルに変える必要がある．
-        Vector3 StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);//マウスの位置を取得します
 
         //Debug.Log($"Start={StartPosition}");
 
         //自分のターンか否かによって判断する.
         //本当は親で判断した方が良いんだろうけどDrag中は親がcanvasになっちゃうから....
 
-        bool isPlayerTurn = GameManager.Instance.isPlayerTurn;
+        bool isPlayerTurn = BattleManager.Instance.isPlayerTurn;
 
         
         //
         if (isPlayerTurn==true)
         {
-            EndPosition = GameManager.Instance.PlayerFieldTransform.position;
+            StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            EndPosition = BattleManager.Instance.PlayerFieldTransform.position;
             //Debug.Log("casting rotating2");
         }
         else
         {
-            EndPosition = GameManager.Instance.EnemyFieldTransform.position;
+            StartPosition = defaultParent.transform.position;
+            EndPosition = BattleManager.Instance.EnemyFieldTransform.position;
             //Debug.Log("casting rotating3");
         }
 
@@ -105,7 +107,7 @@ public class CardCastAnimation : MonoBehaviour
 
 
         //マウスの位置はワールド座標なのでローカルに変える必要がある．
-        if (GameManager.Instance.isPlayerTurn==true)
+        if (BattleManager.Instance.isPlayerTurn==true)
         {
             StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);//マウスの位置を取得します
 
@@ -113,7 +115,7 @@ public class CardCastAnimation : MonoBehaviour
         else
         {
 
-            StartPosition = GameManager.Instance.EnemyFieldTransform.transform.position;
+            StartPosition = BattleManager.Instance.EnemyFieldTransform.transform.position;
 
         }
 
@@ -122,7 +124,7 @@ public class CardCastAnimation : MonoBehaviour
         //自分のターンか否かによって判断する.
         //本当は親で判断した方が良いんだろうけどDrag中は親がcanvasになっちゃうから....
 
-        bool isPlayerTurn = GameManager.Instance.isPlayerTurn;
+        bool isPlayerTurn = BattleManager.Instance.isPlayerTurn;
 
 
         

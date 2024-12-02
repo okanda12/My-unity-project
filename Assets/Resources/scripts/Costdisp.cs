@@ -23,12 +23,12 @@ public class Costdisp : MonoBehaviour
         // costText‚Ìó‘Ô‚É‰‚¶‚Ä Text ‚ğXV
         if (isEnemyCost==true)
         {
-            costText.text = $"mana:{GameManager.Instance.Enemy_Mana}/{GameManager.Instance.Enemy_maxMana}";
+            costText.text = $"mana:{BattleManager.Instance.Enemy_Mana}/{BattleManager.Instance.Enemy_maxMana}";
 
         }
         else
         {
-            costText.text = $"mana:{GameManager.Instance.Player_Mana}/{GameManager.Instance.Player_maxMana}";
+            costText.text = $"mana:{BattleManager.Instance.Player_Mana}/{BattleManager.Instance.Player_maxMana}";
 
         }
 

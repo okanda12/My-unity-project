@@ -51,7 +51,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public void OnBeginDrag(PointerEventData eventData)
     {
 
-        isDraggable = (transform.parent == GameManager.Instance.PlayerHandTransform);
+        isDraggable = (transform.parent == BattleManager.Instance.PlayerHandTransform);
         //親オブジェクトparentを変数に保存
         if (!isDraggable) return;
         defaultParent = transform.parent;
@@ -91,7 +91,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         if (!isDraggable) return;
         CardCastAnimation castAnim = this.GetComponent<CardCastAnimation>();
 
-        if (GameManager.Instance.isPlayerTurn == false) 
+        if (BattleManager.Instance.isPlayerTurn == false) 
         {
             StartCoroutine(castAnim.cantMinionCast(defaultParent));
             Debug.Log("youcan't play in Enemy Turn!!!");
@@ -104,7 +104,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
 
 
-            if (cardModel.cost > GameManager.Instance.Player_Mana)
+            if (cardModel.cost > BattleManager.Instance.Player_Mana || defaultParent ==BattleManager.Instance.PlayerHandTransform)
             {
                 Debug.Log("youcan't play this card!!");
                 StartCoroutine(castAnim.cantMinionCast(defaultParent));
@@ -120,7 +120,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
 
 
-                GameManager.Instance.manasys.UseMana(cardModel.cost);
+                BattleManager.Instance.manasys.UseMana(cardModel.cost);
                 cardcon.ARMA(cardModel.cost);//アルマデバイスにコスト分追加する
 
 
@@ -129,13 +129,13 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
                 {//source target
 
 
-                    cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
+                    cardModel.BattleCry(cardcon, BattleManager.Instance.PlayerHerocon);
                     cardcon.Die();//破壊する
                 }
                 else
                 {
 
-                    cardModel.BattleCry(cardcon, GameManager.Instance.PlayerHerocon);
+                    cardModel.BattleCry(cardcon, BattleManager.Instance.PlayerHerocon);
 
 
 

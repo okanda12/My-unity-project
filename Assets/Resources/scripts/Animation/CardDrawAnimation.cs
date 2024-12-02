@@ -17,10 +17,10 @@ public class CardDrawAnimation : MonoBehaviour
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
-        PlayerDeckTransform = GameManager.Instance.PlayerDeckTransform;
-        PlayerHandTransform = GameManager.Instance.PlayerHandTransform;
-        EnemyDeckTransform = GameManager.Instance.EnemyDeckTransform;
-        EnemyHandTransform = GameManager.Instance.EnemyHandTransform;
+        PlayerDeckTransform = BattleManager.Instance.PlayerDeckTransform;
+        PlayerHandTransform = BattleManager.Instance.PlayerHandTransform;
+        EnemyDeckTransform = BattleManager.Instance.EnemyDeckTransform;
+        EnemyHandTransform = BattleManager.Instance.EnemyHandTransform;
     }
     
     public void DrawCard(Transform hand)

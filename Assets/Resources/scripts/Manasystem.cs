@@ -15,26 +15,26 @@ public class Manasystem : MonoBehaviour
 
     public int Player_Mana
     {
-        get => GameManager.Instance.Player_Mana;
-        set => GameManager.Instance.Player_Mana = value;
+        get => BattleManager.Instance.Player_Mana;
+        set => BattleManager.Instance.Player_Mana = value;
     }
 
     public int Player_maxMana
     {
-        get => GameManager.Instance.Player_maxMana;
-        set => GameManager.Instance.Player_maxMana = value;
+        get => BattleManager.Instance.Player_maxMana;
+        set => BattleManager.Instance.Player_maxMana = value;
     }
 
     public int Enemy_Mana
     {
-        get => GameManager.Instance.Enemy_Mana;
-        set => GameManager.Instance.Enemy_Mana = value;
+        get => BattleManager.Instance.Enemy_Mana;
+        set => BattleManager.Instance.Enemy_Mana = value;
     }
 
     public int Enemy_maxMana
     {
-        get => GameManager.Instance.Enemy_maxMana;
-        set => GameManager.Instance.Enemy_maxMana = value;
+        get => BattleManager.Instance.Enemy_maxMana;
+        set => BattleManager.Instance.Enemy_maxMana = value;
     }
 
 
@@ -50,7 +50,7 @@ public class Manasystem : MonoBehaviour
     {//ターンの初めにマナをリセットする
 
         
-        if (GameManager.Instance.isPlayerTurn == true)
+        if (BattleManager.Instance.isPlayerTurn == true)
         {
             Player_Mana = Player_maxMana;
         }
@@ -98,7 +98,7 @@ public class Manasystem : MonoBehaviour
     public bool CanPlayCard(int cardCost)
     {
 
-        if (GameManager.Instance.isPlayerTurn == true)
+        if (BattleManager.Instance.isPlayerTurn == true)
         {
             return Player_Mana >= cardCost;
         }
@@ -112,16 +112,16 @@ public class Manasystem : MonoBehaviour
 
     public void UseMana(int cost)
     {
-        if (GameManager.Instance.isPlayerTurn == true)
+        if (BattleManager.Instance.isPlayerTurn == true)
         {
             Player_Mana -= cost;
 
-            AnimationManaUse(GameManager.Instance.PlayerCostframe, cost);
+            AnimationManaUse(BattleManager.Instance.PlayerCostframe, cost);
         }
         else
         {
             Enemy_Mana -= cost;
-            AnimationManaUse(GameManager.Instance.EnemyCostframe, cost);
+            AnimationManaUse(BattleManager.Instance.EnemyCostframe, cost);
         }
         
     }
@@ -130,10 +130,10 @@ public class Manasystem : MonoBehaviour
     {
         Animator animator = manaPrefab.GetComponent<Animator>();
 
-        if (GameManager.Instance.isPlayerTurn == true)
+        if (BattleManager.Instance.isPlayerTurn == true)
         {
             Player_Mana += cost;
-            Instantiate(manaPrefab,GameManager.Instance.PlayerCostframe, false);
+            Instantiate(manaPrefab,BattleManager.Instance.PlayerCostframe, false);
             animator.SetBool("create",true);//自動的にcreateされるからいらなったわ
             //animator.SetBool("shining", true);
 
@@ -141,14 +141,14 @@ public class Manasystem : MonoBehaviour
         else
         {
             Enemy_Mana += cost;
-            Instantiate(manaPrefab, GameManager.Instance.EnemyCostframe, false);
+            Instantiate(manaPrefab, BattleManager.Instance.EnemyCostframe, false);
             //animator.SetTrigger("Create");
         }
 
     }
     public void AddmaxMana(int cost)
     {
-        if (GameManager.Instance.isPlayerTurn == true)
+        if (BattleManager.Instance.isPlayerTurn == true)
         {
             Player_maxMana += cost;
         }

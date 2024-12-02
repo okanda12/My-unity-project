@@ -43,18 +43,18 @@ public class CardController : MonoBehaviour, IPointerClickHandler
 
         Debug.Log(transform.parent);
 
-        if (transform.parent == GameManager.Instance.PlayerFieldTransform || transform.parent == GameManager.Instance.PlayerHEROfield)
+        if (transform.parent == BattleManager.Instance.PlayerFieldTransform || transform.parent == BattleManager.Instance.PlayerHEROfield)
         {
-            GameManager.Instance.SelectCardToAttack(this,"Attacker");//UŒ‚Ò‚ğİ’è‚·‚é
-        }else if (transform.parent == GameManager.Instance.EnemyFieldTransform || transform.parent == GameManager.Instance.EnemyHEROfield)
+            BattleManager.Instance.SelectCardToAttack(this,"Attacker");//UŒ‚Ò‚ğİ’è‚·‚é
+        }else if (transform.parent == BattleManager.Instance.EnemyFieldTransform || transform.parent == BattleManager.Instance.EnemyHEROfield)
         {
-            GameManager.Instance.SelectCardToAttack(this, "Defender");//–hŒäÒ‚ğİ’è‚·‚é.
+            BattleManager.Instance.SelectCardToAttack(this, "Defender");//–hŒäÒ‚ğİ’è‚·‚é.
         }
 
 
         //ƒNƒŠƒbƒN‚³‚ê‚½‚ç
         //èD‚ÌƒJ[ƒh‚ÍUŒ‚o—ˆ‚È‚¢
-        //if (transform.parent != GameManager.Instance.PlayerHandTransform)
+        //if (transform.parent != BattleManager.Instance.PlayerHandTransform)
         //{
         
         //    return;
