@@ -43,10 +43,11 @@ public class CardController : MonoBehaviour, IPointerClickHandler
 
         Debug.Log(transform.parent);
 
-        if (transform.parent == BattleManager.Instance.PlayerFieldTransform || transform.parent == BattleManager.Instance.PlayerHEROfield)
+        //grandparentがプレイヤーフィールドの場合
+        if (transform.parent.parent == BattleManager.Instance.PlayerFieldTransform || transform.parent == BattleManager.Instance.PlayerHEROfield)
         {
             BattleManager.Instance.SelectCardToAttack(this,"Attacker");//攻撃者を設定する
-        }else if (transform.parent == BattleManager.Instance.EnemyFieldTransform || transform.parent == BattleManager.Instance.EnemyHEROfield)
+        }else if (transform.parent.parent == BattleManager.Instance.EnemyFieldTransform || transform.parent == BattleManager.Instance.EnemyHEROfield)
         {
             BattleManager.Instance.SelectCardToAttack(this, "Defender");//防御者を設定する.
         }

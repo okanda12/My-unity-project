@@ -6,6 +6,7 @@ using System.Collections;
 public class GameManager : MonoBehaviour
 {
 
+
     [SerializeField] private BlockFilter blockFilter;//フェードのスクリプト
 
     //シングルトンにするための呪文

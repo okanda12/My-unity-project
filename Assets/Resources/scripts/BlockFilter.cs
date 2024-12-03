@@ -80,7 +80,7 @@ public class BlockFilter : MonoBehaviour
         // ÉTÉCÉYÇÃê›íË
         blockTransform.localScale = new Vector3(blockSize, blockSize, 1);
 
-
+        DontDestroyOnLoad(gameObject);
 
         StartCoroutine(FadeOutBlock(block.GetComponent<SpriteRenderer>()));
 
@@ -98,7 +98,7 @@ public class BlockFilter : MonoBehaviour
             float alpha = Mathf.Lerp(1, 0, timer / fadeDuration);
             renderer.color = new Color(originalColor.r, originalColor.g, originalColor.b,alpha);
 
-            DontDestroyOnLoad(gameObject);
+            
             yield return null;
 
         }

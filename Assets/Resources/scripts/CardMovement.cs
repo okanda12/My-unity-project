@@ -16,6 +16,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     public Transform defaultParent;
     public CardModel cardModel;
     CardController cardcon;
+    public CardCastAnimation castAnim;
 
     private Canvas canvas;
     private CanvasGroup canvasGroup;
@@ -81,17 +82,45 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         transform.position = cardPos;
         //カードを引っ張ったときに行う処理
         //transform.position = eventData.position;
-
-
         
+
+        ///////////////////////////////
+        //フィールドを発光させます
+        foreach (Transform daiza in BattleManager.Instance.PlayerFieldTransform)
+        {
+            Animator animator= daiza.GetComponent<Animator>();
+
+            animator.SetBool("chose", true);
+        }
+
+        ////////////////////////////
+       
+
+
+
+
     }
 
+
+
+
     public void OnEndDrag(PointerEventData eventData)
-    {
+    {//DropPlaceからdefaultParentがDropplaceがついているオブジェクトになって返ってくる
         if (!isDraggable) return;
         CardCastAnimation castAnim = this.GetComponent<CardCastAnimation>();
 
-        if (BattleManager.Instance.isPlayerTurn == false) 
+
+        ////フィールドの光を消します
+        foreach (Transform daiza in BattleManager.Instance.PlayerFieldTransform)
+        {
+            Animator animator = daiza.GetComponent<Animator>();
+
+            animator.SetBool("chose", false);
+        }
+
+
+
+        if (BattleManager.Instance.isPlayerTurn == false) //もし相手ターンならやらない.
         {
             StartCoroutine(castAnim.cantMinionCast(defaultParent));
             Debug.Log("youcan't play in Enemy Turn!!!");
@@ -102,45 +131,55 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
 
 
-
-
             if (cardModel.cost > BattleManager.Instance.Player_Mana || defaultParent ==BattleManager.Instance.PlayerHandTransform)
-            {
+            {　//出せない
                 Debug.Log("youcan't play this card!!");
                 StartCoroutine(castAnim.cantMinionCast(defaultParent));
-
-
+            
+            
+                
             }
             else//カードが出せるとき
             {
-                //defaultParentがDropplaceになってます
-
-                StartCoroutine(castAnim.MinionCast(defaultParent));
-
-
-
-
-                BattleManager.Instance.manasys.UseMana(cardModel.cost);
-                cardcon.ARMA(cardModel.cost);//アルマデバイスにコスト分追加する
-
-
-
-                if (cardModel.cardType == "Magic")
-                {//source target
-
-
-                    cardModel.BattleCry(cardcon, BattleManager.Instance.PlayerHerocon);
-                    cardcon.Die();//破壊する
+                //defaultParentがおそらくDaizaになってます
+                if (defaultParent.childCount != 0)//既に親が子を持っていたら
+                {
+                    Debug.Log("youcan't play this card!!");
+                    StartCoroutine(castAnim.cantMinionCast(BattleManager.Instance.PlayerHandTransform));
                 }
                 else
                 {
+                    
 
-                    cardModel.BattleCry(cardcon, BattleManager.Instance.PlayerHerocon);
+                    
 
+                    
+
+                    if (cardModel.cardType == "Magic")
+                    {//source target
+
+                        StartCoroutine(castAnim.MagicCast(defaultParent));
+                        
+                        
+                        
+                    }
+                    else
+                    {
+                        StartCoroutine(castAnim.MinionCast(defaultParent));
+
+                        
+
+
+
+                    }
+
+                    BattleManager.Instance.manasys.UseMana(cardModel.cost);
+
+
+                    cardcon.ARMA(cardModel.cost);//アルマデバイスにコスト分追加する
 
 
                 }
-
 
             }
 

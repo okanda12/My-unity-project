@@ -17,6 +17,9 @@ public class BattleManager : MonoBehaviour
     public Transform PlayerHEROfield, EnemyHEROfield;
     public Transform PlayerDeckTransform, EnemyDeckTransform;
     public Transform PlayerCostframe, EnemyCostframe;
+    public Transform canvas2; //攻撃するときにカードが一番上に表示されるように移動するキャンバス
+    public Transform MagiCasPlace;//魔法をキャストする場所
+
 
     private Deck playerDeck;
     private Deck enemyDeck;
@@ -114,7 +117,7 @@ public class BattleManager : MonoBehaviour
     public void EnemyFieldHighlight(bool YES)
     {//敵の情報を取得.そいつらにハイライトをつける
 
-
+        //ちな孫も追えます
         CardController[] EnemyFieldcardList = EnemyFieldTransform.GetComponentsInChildren<CardController>();
 
         if (YES == true)
@@ -309,6 +312,8 @@ public class BattleManager : MonoBehaviour
         CardController[] EMfieldCC = EnemyFieldTransform.GetComponentsInChildren<CardController>();//フィールドのコントローラー
 
 
+        //もし手札に何もなかったら終了
+
         if (EMhandCC.Length == 0)
         {
             EMcastflag = true;
@@ -321,19 +326,48 @@ public class BattleManager : MonoBehaviour
         int iterationCount = 0;
 
 
-
+        //maxIterationまで以下を繰り返す.相手がちょっと考えるような動作をとるときはこれが原因
 
         while (iterationCount < maxIterations)
         {
+
+
             bool cardCasted = false;
 
-            foreach (CardController card in EMhandCC)
+
+
+
+            foreach (CardController card in EMhandCC)//ハンドを全てみて　
             {
-                if (card.model.cost <= Enemy_Mana && EMfieldCC.Length < 5)
+                if (card.model.cost <= Enemy_Mana && EMfieldCC.Length < 5)//手札のカード一枚を見ています
                 {
+                    
+                    //フィールドの状態を見ている
+                    List<Transform> NocardDaiza = new List<Transform>();//ここにオブジェクトを持たない台座を追加していく
+
+
+                    foreach (Transform child in EnemyFieldTransform)//子オブジェクトを持たないdaizaを取得していく
+                    {
+                        if (child.childCount == 0) // 子オブジェクトを持たないなら葉ノード
+                        {
+                            NocardDaiza.Add(child);
+                        }
+
+                    }
+
+
                     CardCastAnimation castAnim = card.GetComponent<CardCastAnimation>();
                     BattleManager.Instance.manasys.UseMana(card.model.cost);
-                    StartCoroutine(castAnim.MinionCast(EnemyFieldTransform));
+
+                    if (card.model.cardType=="Magic")
+                    {
+                        StartCoroutine(castAnim.MagicCast(NocardDaiza[0]));
+                    }
+                    else
+                    {
+                        StartCoroutine(castAnim.MinionCast(NocardDaiza[0]));
+                    }
+                    
                     cardCasted = true;
 
 
@@ -429,6 +463,15 @@ public class BattleManager : MonoBehaviour
 
     public IEnumerator EnemyTurn()
     {
+        CardController[] PlayerFieldcardList = PlayerFieldTransform.GetComponentsInChildren<CardController>();
+
+
+        //自分のカードを攻撃できなくする処理
+        foreach (var card in PlayerFieldcardList)
+        {
+            card.canAttack = false;
+
+        }
 
 
         //エネミーターンの処理

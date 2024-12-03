@@ -10,13 +10,17 @@ public class CardAttackAnimation : MonoBehaviour
 
     public CardView View;
     public CardModel Model;
+    public GameObject banish;//死ぬときにもわわ＝んとなるやつ
 
+  
     //public Transform targetTransform;//ターゲット
 
     public float AttackDurationGO;//行きの時間
     public float AttackDurationBack;//戻りの時間
 
     public float CantAttackDuration;//攻撃できない
+
+    public float DieDuration;
 
     private Transform rectTransform;
 
@@ -80,7 +84,7 @@ public class CardAttackAnimation : MonoBehaviour
             Model.hp -= damage;
             if (Model.hp <= 0)
             {
-                Die();
+               StartCoroutine( Die());
 
             }
             View.Show(Model);
@@ -98,9 +102,24 @@ public class CardAttackAnimation : MonoBehaviour
     /// <summary>
     //ころしますよ！
     /// </summary>
-    public void Die()
+    public IEnumerator Die()
     {
+
+
+
+
+
+
+
+        GameObject banisher=Instantiate(banish, transform);
+
+
+        yield return new WaitForSeconds(0.5f);
+
+        Destroy(banisher);
+
         Destroy(gameObject);
+
     }
     //}
 
@@ -165,8 +184,20 @@ public class CardAttackAnimation : MonoBehaviour
 
     public IEnumerator AttackAnim(CardController fromCard,CardController targetCard)
     {
+
+
+
+        
+
+
         Transform from = this.transform;
+
+        
         Transform target = targetCard.transform;
+
+        Transform defaultparent = this.transform.parent;
+
+        //いったん一番うえに表示する
 
 
         float elapsedTime = 0f;
@@ -175,7 +206,12 @@ public class CardAttackAnimation : MonoBehaviour
         IgnoreLayout(from,true);
 
         Vector3 startPosition = from.GetComponent<Transform>().position;
+
+
+
         Vector3 endPosition = target.GetComponent<Transform>().position;
+
+
 
         Debug.Log($"startPosition:{startPosition},endPosition:{endPosition}");
 
@@ -184,6 +220,8 @@ public class CardAttackAnimation : MonoBehaviour
         Quaternion startRotation = Quaternion.identity;//これは無回転
         Quaternion endRotation = Quaternion.Euler(0,0,-45);
 
+
+        this.transform.SetParent(BattleManager.Instance.canvas2, true);//おそらくここで設定するのが良さそう
 
         //アタック行き
         while (elapsedTime <AttackDurationGO)
@@ -237,6 +275,8 @@ public class CardAttackAnimation : MonoBehaviour
         rectTransform.rotation = startRotation;
 
         IgnoreLayout(from,false);
+        this.transform.SetParent(defaultparent, true);
+        Debug.Log($"defaultParent{defaultparent}");
 
         //yield return new WaitForSeconds(AttackDurationGO+AttackDurationBack);
         fromCard.canAttack = false;

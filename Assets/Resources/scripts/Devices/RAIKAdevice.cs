@@ -51,10 +51,16 @@ public class RAIKAdevice : Herodevices
         //これいいね！！！
 
 
-        foreach (Transform cardTransform in field)
+        foreach (Transform daiza in field)
         {
-            ReverseStatsAnim reverseAnim = cardTransform.GetComponent<ReverseStatsAnim>();
-            StartCoroutine(reverseAnim.ReverseStats());
+
+            //getcomponetinchildrenは最初の一つしか持ってこないのでリストにして
+            ReverseStatsAnim[] reverseAnims = daiza.GetComponentsInChildren<ReverseStatsAnim>();
+            foreach (ReverseStatsAnim reverseAnim in reverseAnims)
+            {
+                StartCoroutine(reverseAnim.ReverseStats());
+            }
+            
 
 
         }

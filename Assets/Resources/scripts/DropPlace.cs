@@ -9,8 +9,11 @@ using UnityEngine.EventSystems;
 public class DropPlace : MonoBehaviour, IDropHandler
 {
 
-
+    
     CardModel model;
+
+
+
     public void OnDrop(PointerEventData eventData)
     {
         //カードが重なった時に親を変更する.
@@ -24,7 +27,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
 
         // ドロップされたカードのデータを参照する
 
-        if (card != null)
+        if (card != null )//カードが存在して,親オブジェクトがプレイやーなら　
         {
             model = card.cardModel;
             //Debug.Log(this.transform);
@@ -32,7 +35,8 @@ public class DropPlace : MonoBehaviour, IDropHandler
             
             //Debug.Log($"Card Dropped: {model.name}, AT: {model.at}, HP: {model.hp}, Cost: {model.cost}");
             if (model.cost > BattleManager.Instance.Player_Mana || card.defaultParent == this.transform)
-            {
+            {//カードが出せない時
+
                 //親をhandにしたまま返す
                
                 return;
@@ -44,10 +48,6 @@ public class DropPlace : MonoBehaviour, IDropHandler
 
                 //親をこれにして返す
                 card.defaultParent = this.transform;
-
-                
-                
-
 
             }
             
