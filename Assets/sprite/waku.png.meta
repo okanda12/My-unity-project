@@ -134,9 +134,9 @@ TextureImporter:
       name: waku_1
       rect:
         serializedVersion: 2
-        x: 304
+        x: 316
         y: 72
-        width: 208
+        width: 192
         height: 236
       alignment: 0
       pivot: {x: 0, y: 0}
@@ -157,7 +157,7 @@ TextureImporter:
         serializedVersion: 2
         x: 556
         y: 72
-        width: 208
+        width: 192
         height: 236
       alignment: 0
       pivot: {x: 0, y: 0}

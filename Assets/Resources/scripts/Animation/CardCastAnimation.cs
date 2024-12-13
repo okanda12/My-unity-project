@@ -107,7 +107,7 @@ public class CardCastAnimation : MonoBehaviour
 
             canvasGroup.alpha = 1f -   t;
 
-            Debug.Log(canvasGroup.alpha);
+            //Debug.Log(canvasGroup.alpha);
             yield return null;
 
         }
@@ -126,8 +126,15 @@ public class CardCastAnimation : MonoBehaviour
 
 
         //yield return new WaitForSeconds(CastDuration);
-
-        cardcon.model.BattleCry(cardcon, BattleManager.Instance.PlayerHerocon);
+        if (BattleManager.Instance.isPlayerTurn == false)//相手ターンなら
+        {
+            cardcon.model.BattleCry(cardcon, BattleManager.Instance.EnemyHerocon);
+        }
+        else
+        {
+            cardcon.model.BattleCry(cardcon, BattleManager.Instance.PlayerHerocon);
+        }
+        
 
         yield return new WaitForSeconds(0.5f);
 
@@ -154,7 +161,7 @@ public class CardCastAnimation : MonoBehaviour
         
         //マウスの位置はワールド座標なのでローカルに変える必要がある．
 
-        Debug.Log($"defaultparent={defaultParent.name}");
+        //Debug.Log($"defaultparent={defaultParent.name}");
 
         //自分のターンか否かによって判断する.
         //本当は親で判断した方が良いんだろうけどDrag中は親がcanvasになっちゃうから....

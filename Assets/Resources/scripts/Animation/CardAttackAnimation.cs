@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using TMPro;
 
 
+//カードが攻撃するアニメーションです.
 public class CardAttackAnimation : MonoBehaviour
 {
 
@@ -13,20 +14,24 @@ public class CardAttackAnimation : MonoBehaviour
     public GameObject banish;//死ぬときにもわわ＝んとなるやつ
 
   
-    //public Transform targetTransform;//ターゲット
+    //一連の動き
+    //fromカードが攻撃してtargetに向かい,fromに戻ります.
 
     public float AttackDurationGO;//行きの時間
     public float AttackDurationBack;//戻りの時間
-
     public float CantAttackDuration;//攻撃できない
 
-    public float DieDuration;
+    public float DieDuration;//死んでいくときのアニメーション時間
 
-    private Transform rectTransform;
+    private Transform rectTransform;//アタッチされているカードのtransformです
+
+    public Transform HeartPosition;
 
     public GameObject Attackedtext;//攻撃されたとき,したときにぽわわ～んとなるやつ
     public float AttackedDuration;//の時間
+    public float bletime;
 
+    [SerializeField] private Animator HEROdamageAnim;//ヒーろーがダメージを受けたときのアニメーション
 
 
     private void Awake()
@@ -37,18 +42,33 @@ public class CardAttackAnimation : MonoBehaviour
 
     }
 
-   
-
-    //ダメージを入れればハートのところにぽわわ～んて出る
-    public IEnumerator GetDamage(int damage)
+    //ダメージを受けたときにちょっとぶれるアニメーションです
+    public IEnumerator ble()
     {
+        Vector3 startPosition = this.transform.position;
         
+        float elapsedTime = 0f;
+
+        while (elapsedTime < bletime)
+        {
+
+            elapsedTime += Time.deltaTime;
+            this.transform.position = startPosition + new Vector3(0.03f*Random.Range(-1f,1f),0.03f* Random.Range(-1f, 1f), 0);
+
+            yield return null;
+        }
 
 
-        Transform HeartPosition = transform.Find("Heart");//ハートの位置から飛ばす
+        this.transform.position = startPosition;
+    }
+
+
+    //ハートが飛んでいくアニメーション
+    public IEnumerator HeartDamage(int damage)
+    {
 
         Vector3 startPosition = HeartPosition.position;
-        Vector3 endPosition =startPosition + new Vector3(0, 0.1f, 0);
+        Vector3 endPosition = startPosition + new Vector3(0, 0.05f, 0);
 
 
         TextMeshProUGUI Damagetext = Attackedtext.GetComponentInChildren<TextMeshProUGUI>();
@@ -59,56 +79,73 @@ public class CardAttackAnimation : MonoBehaviour
         GameObject Damagetextobject = Instantiate(Attackedtext, HeartPosition, false);
 
 
+
+
+
+
+
         float elapsedTime = 0f;
 
-        while (elapsedTime <AttackedDuration )
+
+        while (elapsedTime < AttackedDuration)
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / AttackedDuration;
 
             if (Damagetextobject != null)
             {
-                Damagetextobject.transform.position = Vector3.Lerp(startPosition, endPosition, t * t);
+                Damagetextobject.transform.position = Vector3.Lerp(startPosition, endPosition, t);
             }
 
             yield return null;
-            
-            
+
+
         }
+
         Destroy(Damagetextobject);//消す
 
         if (this != null)
         {
             Model = GetComponent<CardController>().model;
             View = GetComponent<CardController>().view;
+
+
+            if (Model.cardType=="Hero")
+            {
+                HEROdamageAnim.SetTrigger("HeroDamage");
+            }
+
+
+            //ダメージを受けます
             Model.hp -= damage;
             if (Model.hp <= 0)
             {
-               StartCoroutine( Die());
+                StartCoroutine(Die());
 
             }
+
+            
             View.Show(Model);
         }
 
-            
+    }
 
-        
+    //ダメージを受けたときのアニメーション
+    public IEnumerator GetDamage(int damage)
+    {
 
-        
+
+        StartCoroutine(ble());
+        //Transform HeartPosition = transform.Find("Heart");//ハートの位置から飛ばす
+        yield return StartCoroutine(HeartDamage(damage));
 
     }
 
 
-    /// <summary>
-    //ころしますよ！
-    /// </summary>
+    //死ぬときです.爆発(banisher)して死にます.
+  
     public IEnumerator Die()
     {
-
-
-
-
-
 
 
         GameObject banisher=Instantiate(banish, transform);
@@ -125,6 +162,7 @@ public class CardAttackAnimation : MonoBehaviour
 
 
     //カードに動きをつけるため,Horizontal Layoutを一瞬だけ無効にします.
+    //Horizontal Layout を付けているとpositionの変更ができません....
     public void IgnoreLayout(Transform from,  bool ignore)
     {
         LayoutElement layoutElement = from.GetComponent<LayoutElement>();
@@ -135,7 +173,7 @@ public class CardAttackAnimation : MonoBehaviour
         }
     }
 
-    //攻撃できないとき,ブルブル震えます.
+    //攻撃できないとき,ちょっと回転して戻ります.はにゃ？見たいな感じ
     public IEnumerator CantAttack(Transform from)
     {
         float elapsedTime = 0f;
@@ -181,7 +219,6 @@ public class CardAttackAnimation : MonoBehaviour
 
 
     //攻撃モーションです.自分の位置(from)から相手の位置(target)へ行って戻ります
-
     public IEnumerator AttackAnim(CardController fromCard,CardController targetCard)
     {
 
@@ -203,12 +240,9 @@ public class CardAttackAnimation : MonoBehaviour
         float elapsedTime = 0f;
 
 
-        IgnoreLayout(from,true);
+        IgnoreLayout(from,true);//一旦レイアウトを無視します.
 
         Vector3 startPosition = from.GetComponent<Transform>().position;
-
-
-
         Vector3 endPosition = target.GetComponent<Transform>().position;
 
 
@@ -223,8 +257,9 @@ public class CardAttackAnimation : MonoBehaviour
 
         this.transform.SetParent(BattleManager.Instance.canvas2, true);//おそらくここで設定するのが良さそう
 
-        //アタック行き
-        while (elapsedTime <AttackDurationGO)
+        //////////////////
+        ///アタック行き
+        while (elapsedTime <AttackDurationGO - 0.2*AttackDurationGO)//完全に重なる直前で止まる
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / AttackDurationGO;
@@ -237,11 +272,11 @@ public class CardAttackAnimation : MonoBehaviour
             yield return null;
 
         }
-
-
+        endPosition = rectTransform.position;//現在位置
+        endRotation = rectTransform.rotation;//現在位置
+        ////////////////////////
         //アタック途中
 
-        //ここでダメージアニメーションを二個入れています
         CardAttackAnimation targetAnim = targetCard.GetComponent<CardAttackAnimation>();//無理やり持ってきてる
         
         
@@ -251,7 +286,7 @@ public class CardAttackAnimation : MonoBehaviour
         yield return new WaitForSeconds(0.2f);//なんかこれじゅうようやね
 
 
-
+        /////////////////////////////////
         //アタック帰り
         elapsedTime = 0f;
 

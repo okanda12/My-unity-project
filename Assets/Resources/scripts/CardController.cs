@@ -36,6 +36,8 @@ public class CardController : MonoBehaviour, IPointerClickHandler
 
     }
 
+   
+    //ƒNƒŠƒbƒN‚³‚ê‚½‚Ìˆ—
     public void OnPointerClick(PointerEventData eventData)
     {
 
@@ -47,7 +49,8 @@ public class CardController : MonoBehaviour, IPointerClickHandler
         if (transform.parent.parent == BattleManager.Instance.PlayerFieldTransform || transform.parent == BattleManager.Instance.PlayerHEROfield)
         {
             BattleManager.Instance.SelectCardToAttack(this,"Attacker");//UŒ‚Ò‚ğİ’è‚·‚é
-        }else if (transform.parent.parent == BattleManager.Instance.EnemyFieldTransform || transform.parent == BattleManager.Instance.EnemyHEROfield)
+        }
+        else if (transform.parent.parent == BattleManager.Instance.EnemyFieldTransform || transform.parent == BattleManager.Instance.EnemyHEROfield)
         {
             BattleManager.Instance.SelectCardToAttack(this, "Defender");//–hŒäÒ‚ğİ’è‚·‚é.
         }

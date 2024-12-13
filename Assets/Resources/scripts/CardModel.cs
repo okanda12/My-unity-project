@@ -14,6 +14,8 @@ public class CardModel
 
     public MinionEffect[] effects;
 
+    public int maxhp;
+
 
     //コンストラクタ 作成されたときに実行される初期化関数
     public CardModel(ICard cardEntity,MinionEffect[] CardBattlecry)
@@ -29,6 +31,8 @@ public class CardModel
         cardType = cardEntity.CardType;
 
         effects = CardBattlecry;
+
+        maxhp = hp;
 
     }
 

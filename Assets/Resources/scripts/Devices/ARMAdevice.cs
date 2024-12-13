@@ -1,14 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
 
-public class ARMAdevice :Herodevices
+//ARMAくんが持っているせんぷうきみたいなデバイスについているスクリプトです.
+//自分がコストを使うとゲージが溜まっていき,報酬カードがもらえます.
+//コストを使うたびにせんぷうきが回ります.
+
+public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 {
     [SerializeField] private int rewardCost = 50;//特殊カードを得るためのコスト
     [SerializeField] private int currentCost = 0; //現在までの類型コスト
     [SerializeField] private Transform hane;//find使うより最初から設定しておくと良いかな
     [SerializeField] private GameObject rewardCardPrefab;//　報酬カードのPrefab
+    [SerializeField] private TextMeshProUGUI ARMAtext;//類型コストを表示します.
 
+    [SerializeField] Slider slider;//スライダーを入れてください
     //[SerializeField] private Color startColor;
    // [SerializeField] private Color endColor;
    //色変える場合はこれ使いましょう
@@ -16,15 +25,21 @@ public class ARMAdevice :Herodevices
     public float rotationDuration;
 
 
-    //なんかさ～deviceの位置からカード飛ばした方が良いかも
 
     public override void Initialize()
     {
         
-        
-       currentCost = 0;
+
+        currentCost = 0;
     }
 
+    void Start()
+    {
+        ARMAtext.gameObject.SetActive(false);//初期状態でテキストは非表示とします.
+        slider.value = 0;
+    }
+
+    //
     public void AddCost(int cost)
     {
         currentCost += cost;
@@ -41,6 +56,9 @@ public class ARMAdevice :Herodevices
 
         }
 
+        slider.value = (float)currentCost/(float)rewardCost;//スライダー更新
+        Debug.Log($"ARMA slider.value{slider.value}warizan{currentCost / rewardCost}");
+
     }
 
     private void GrantReward()
@@ -56,7 +74,7 @@ public class ARMAdevice :Herodevices
         //float 
         float minspeed = 0f;
         float acceleration = 6f;
-        float currentspeed =4f;//maxspeedから始まり,徐々に下げていく
+        float currentspeed =8f;//maxspeedから始まり,徐々に下げていく
 
 
         float elapsedTime = 0f;
@@ -101,5 +119,36 @@ public class ARMAdevice :Herodevices
 
 
 
+
+
+
+
+
+
+    /// <summary>
+    /// ///////////////////////////////////
+    /// </summary>
+    /// <param name="eventData"></param>
+    //ここから下はマウスをかざした時の処理です.
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+
+        Debug.Log("ARMAデバイスを触りましたね");
+        UpdateARMAText();//コスト情報をアップデートします
+        ARMAtext.gameObject.SetActive(true);//テキストを表示
+        
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ARMAtext.gameObject.SetActive(false);
+
+    }
+
+    private void UpdateARMAText()
+    {
+        ARMAtext.text=$"ARMA:{currentCost}/{rewardCost}" ;
+    }
 
 }

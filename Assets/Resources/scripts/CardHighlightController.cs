@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-//これは他のアニメーションにも使えそう
+//カードについてます．
+//ハイライトを生成するスクリプトです.
 public class CardHighlightController : MonoBehaviour
 {
     public GameObject whiteHighlightPrefab;

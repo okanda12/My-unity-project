@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 23868d537ffb73b4f8b34fe60a8ad898
+guid: 48e9d5755085ddc4084a343890555980
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,13 +110,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: AROH_0
+      name: cards2-Sheet_0
       rect:
         serializedVersion: 2
-        x: 208
-        y: 528
-        width: 192
-        height: 352
+        x: 0
+        y: 0
+        width: 240
+        height: 240
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -124,20 +124,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 829433ee29b9e9748b4c990ce0d21b3b
-      internalID: -1703591060
+      spriteID: 43cdfd4ba8e8af346935e0f3bb18acb7
+      internalID: -1109687685
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AROH_1
+      name: cards2-Sheet_1
       rect:
         serializedVersion: 2
-        x: 492
-        y: 528
-        width: 192
-        height: 352
+        x: 240
+        y: 0
+        width: 240
+        height: 240
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -145,20 +145,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 164dd420bc17ca64791e65ff62d06444
-      internalID: 1683231235
+      spriteID: 498a40c8d9a74e04a8e3f7c4a39b4b9d
+      internalID: 42902713
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AROH_2
+      name: cards2-Sheet_2
       rect:
         serializedVersion: 2
-        x: 936
-        y: 544
-        width: 172
-        height: 296
+        x: 480
+        y: 0
+        width: 240
+        height: 240
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -166,20 +166,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: aa8fe116c9aad694cafec4ac0cf219cc
-      internalID: 2009928642
+      spriteID: 6b41b81acfd524f4eacc9dfe0505033e
+      internalID: -2110138700
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AROH_3
+      name: cards2-Sheet_3
       rect:
         serializedVersion: 2
-        x: 1208
-        y: 540
-        width: 180
-        height: 320
+        x: 720
+        y: 0
+        width: 240
+        height: 240
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -187,20 +187,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 52ba8c9f538349146974f7a3102ba269
-      internalID: 187638955
+      spriteID: 4abb18e5c17e32349ad2ce8597ec9a79
+      internalID: 1792816116
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AROH_4
+      name: cards2-Sheet_4
       rect:
         serializedVersion: 2
-        x: 208
-        y: 204
-        width: 200
-        height: 272
+        x: 960
+        y: 0
+        width: 240
+        height: 240
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -208,20 +208,20 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 85f737dbdb1e0b1428f11b8984f4f1b5
-      internalID: 842743791
+      spriteID: e5d75d8ee9184f043985f1d78a72a9f9
+      internalID: 988997831
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: AROH_5
+      name: cards2-Sheet_5
       rect:
         serializedVersion: 2
-        x: 504
-        y: 204
-        width: 200
-        height: 272
+        x: 1200
+        y: 0
+        width: 240
+        height: 240
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -229,8 +229,50 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 5a80eac95d3fde54eb12cad8ac6be159
-      internalID: -1395019880
+      spriteID: dfcb661eea971354292f593c755831f6
+      internalID: -307717614
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cards2-Sheet_6
+      rect:
+        serializedVersion: 2
+        x: 1440
+        y: 0
+        width: 240
+        height: 240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 3a5403a973a186e468c396301fb73e92
+      internalID: -67933489
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: cards2-Sheet_7
+      rect:
+        serializedVersion: 2
+        x: 1680
+        y: 0
+        width: 240
+        height: 240
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 2cb0d6eee800e6240bef77d767e68b39
+      internalID: -347700462
       vertices: []
       indices: 
       edges: []
@@ -246,12 +288,14 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      AROH_0: -1703591060
-      AROH_1: 1683231235
-      AROH_2: 2009928642
-      AROH_3: 187638955
-      AROH_4: 842743791
-      AROH_5: -1395019880
+      cards2-Sheet_0: -1109687685
+      cards2-Sheet_1: 42902713
+      cards2-Sheet_2: -2110138700
+      cards2-Sheet_3: 1792816116
+      cards2-Sheet_4: 988997831
+      cards2-Sheet_5: -307717614
+      cards2-Sheet_6: -67933489
+      cards2-Sheet_7: -347700462
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

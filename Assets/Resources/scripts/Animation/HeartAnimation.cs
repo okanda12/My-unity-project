@@ -7,6 +7,7 @@ using TMPro;
 public class HeartAnimation : MonoBehaviour
 {
     public GameObject heartPrefab; //ハートのプレファブ
+    public Transform HeartPosition;//回復量を表すやつをとばす元
     public int heartCount ;//飛ばすハートの数
     public float animationDuration ; //アニメーションの継続時間
     public float radius ;//ハートが飛ぶ半径
@@ -25,7 +26,6 @@ public class HeartAnimation : MonoBehaviour
     {
         
         float elapsedTime = 0f;
-        Transform HeartPosition = transform.Find("Heart");//ハートの位置から飛ばす
         
         Vector3 startPosition = HeartPosition.position;
         Vector3 endPosition = startPosition + new Vector3(0, 0.1f, 0); 

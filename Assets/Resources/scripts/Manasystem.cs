@@ -59,7 +59,7 @@ public class Manasystem : MonoBehaviour
             Enemy_Mana = Enemy_maxMana;
         }
 
-
+        //子オブジェクトの数以下を繰り返す
         int childCount = costFrame.childCount;
 
         //Debug.Log($"childCount{childCount}");
@@ -75,7 +75,7 @@ public class Manasystem : MonoBehaviour
                 animator.SetBool("create",true);
                 animator.SetBool("used", false);
                 //animator.SetBool("shining", true);
-                Debug.LogWarning($"MANA create trigger! ");
+                //Debug.LogWarning($"MANA create trigger! ");
             }
             else
             {

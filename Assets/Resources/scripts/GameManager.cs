@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     //シングルトンにするための呪文
     public static GameManager Instance { get; private set; }
 
+    public bool sceneGO = false;
+
     private void Awake()
     {
 
@@ -53,10 +55,19 @@ public class GameManager : MonoBehaviour
         blockFilter.StartFillingAnimation(); // アニメーション開始
 
         // アニメーションの完了まで待機 (必要に応じて秒数を変更)
-        yield return new WaitForSeconds(1f);
+        while (sceneGO==false)
+        {
+            yield return null;
+        }
+
+       
 
         // シーン遷移
         SceneManager.LoadScene("BattleScene");
+
+
+
+
     }
 
 

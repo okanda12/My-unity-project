@@ -5,6 +5,11 @@ using UnityEngine.UI;
 using TMPro;
 
 
+//カードの見た目をきめるスクリプトです.
+//cardcontrollerとcardmodelとcardviewがあります.
+
+
+
 public class CardView : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI nameText, hpText, atText, cosText;
@@ -12,6 +17,8 @@ public class CardView : MonoBehaviour
     [SerializeField] Image waku;
     [SerializeField] Image Dot;
     [SerializeField] Frames frame;
+    [SerializeField] Image Heart;
+    [SerializeField] Image Sword;
 
 
 
@@ -36,7 +43,21 @@ public class CardView : MonoBehaviour
             RectTransform rectTransform = GetComponent<RectTransform>();
             rectTransform.localScale = Vector3.one * 1.1f;
 
-           
+
+            //ダメージを受けていたらテキストを赤く
+            if (cardModel.hp < cardModel.maxhp)
+            {
+                hpText.color = new Color(0.9f, 0.2f, 0.2f, 0.8f);
+            }
+
+            //増強していたら緑色に
+
+            if (cardModel.hp > cardModel.maxhp)
+            {
+                hpText.color = new Color(1.0f, 1.0f, 1.0f, 0.8f);
+            }
+
+
         }
         else if(cardModel.cardType == "Minion")
         {
@@ -47,24 +68,41 @@ public class CardView : MonoBehaviour
             cosText.text = cardModel.cost.ToString();
             iconImage.sprite = cardModel.icon;
 
+            //ダメージを受けていたらテキストを赤く
+            if (cardModel.hp < cardModel.maxhp)
+            {
+                hpText.color = new Color(0.9f, 0.2f, 0.2f, 0.8f);
+            }
+
+            //増強していたら緑色に
+            if (cardModel.hp > cardModel.maxhp)
+            {
+                hpText.color = new Color(1.0f, 1.0f, 1.0f, 0.8f);
+            }
+
         }
         else if (cardModel.cardType == "Magic")
         {
+            //魔法カードの場合はhp,atなどがいらないので削除しています
             waku.sprite = frame.Magicframe;
             nameText.text = cardModel.name;
-            hpText.text = cardModel.hp.ToString();
-            atText.text = cardModel.at.ToString();
+
+            hpText.text = null;
+            atText.text = null;
             cosText.text = cardModel.cost.ToString();
             iconImage.sprite = cardModel.icon;
-
+            Heart.enabled = false;
+            Sword.enabled = false;
         }
 
     }
 
+
+    //Heroの部分は少し形が特殊なため,サイズを調整しています.
     private void AdjustImagetoSprite(Image image)
     {
 
-        float kakudai = 2f;
+        float kakudai = 0.53f;
         //スプライトのサイズを取得
         Vector2 spriteSize = new Vector2(kakudai*image.sprite.rect.width, kakudai*image.sprite.rect.height);
 

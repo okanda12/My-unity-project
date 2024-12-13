@@ -8,10 +8,12 @@ public class BattleManager : MonoBehaviour
 
     //カードのプレファブを入れる
     [SerializeField] CardController cardPrefab;
+    [SerializeField] GameObject ARMAdevpre;
+    [SerializeField] GameObject RAIKAdevpre;
     //ヒーローのプレファブを入れる
     // [SerializeField] heroPrefab;
 
-    //手札のTransformを入れる
+
     public Transform PlayerHandTransform, EnemyHandTransform;
     public Transform PlayerFieldTransform, EnemyFieldTransform;
     public Transform PlayerHEROfield, EnemyHEROfield;
@@ -19,16 +21,17 @@ public class BattleManager : MonoBehaviour
     public Transform PlayerCostframe, EnemyCostframe;
     public Transform canvas2; //攻撃するときにカードが一番上に表示されるように移動するキャンバス
     public Transform MagiCasPlace;//魔法をキャストする場所
+    public Transform EnemyDevice, PlayerDevice;//デバイスを置く場所
 
 
-    private Deck playerDeck;
-    private Deck enemyDeck;
+    public Deck playerDeck;
+    public Deck enemyDeck;
 
     //プレイヤーのターンかの判定
     public bool isPlayerTurn;//Turndisplayerに出力
 
     public string PlayerHERO = "ARMA";
-    public string EnemyHERO = "ZERO2";
+    public string EnemyHERO = "RAIKA";
 
 
     public int Player_Mana;
@@ -57,7 +60,7 @@ public class BattleManager : MonoBehaviour
     private bool EMcastflag = false;//キャストできるカードがないとtrue;
     private bool EMatackflag = false; //アタックできるカードが無いとtrue;
 
-
+    public bool isAnimating = false;//アニメーション中かどうか判断
 
 
     //シングルトンにするための呪文
@@ -84,31 +87,42 @@ public class BattleManager : MonoBehaviour
     void Start()
     {
 
+        
+        
+
         if (manasys == null)
         {
             manasys = new Manasystem();
         }
 
 
-        StartGame();
+        StartCoroutine(StartGame());
 
 
 
-        isPlayerTurn = true;
-        TurnCalc();
+        
     }
 
-    private void StartGame()
+    private IEnumerator StartGame()
     {
+
+        //ヒーろー出現モーションを入れたい
+
+        yield return new WaitForSeconds(1.5f);
+        
+        //ヒーろ‐デバイスモーションを入れたい
+
 
         HeroAppears();
 
-
+       
 
 
 
         StartCoroutine(SettingHand());
         manasys.InitializeMana(0);
+        isPlayerTurn = true;
+        TurnCalc();
 
         RAIKAdevice = FindObjectOfType<RAIKAdevice>();
     }
@@ -149,15 +163,15 @@ public class BattleManager : MonoBehaviour
     public void SelectCardToAttack(CardController card, string isAttacker)
     {
 
-        if (isAttacker == "Attacker")
+        if (isAttacker == "Attacker")//攻撃者なら
         {
-            //最初にカードを選ぶ
+            //選択しているカード
             selectedCard = card;
-            if (selectedCard.canAttack == true)
+            if (selectedCard.canAttack == true)//攻撃できるなら
             {
 
                 Debug.Log("攻撃者カード選択:" + selectedCard.model.name);//お名前を取得
-                EnemyFieldHighlight(true);//ハイライトを付けます.
+                EnemyFieldHighlight(true);//敵のフィールドのミニオンにハイライトを付けます.
             }
             else
             {
@@ -174,7 +188,7 @@ public class BattleManager : MonoBehaviour
 
 
         }
-        else if (isAttacker == "Defender" && selectedCard != null)//ここに条件を追加
+        else if (isAttacker == "Defender" && selectedCard != null)//防御者なら
         {
 
             if (selectedCard.canAttack == true)
@@ -219,39 +233,74 @@ public class BattleManager : MonoBehaviour
 
 
 
-
+    //ヒーローが登場する部分です
     private void HeroAppears()
     {
+        //ここもっと簡素化出来るかも
 
+        ICard Playercard=LoadHeroCard(1);
+        ICard Enemycard=LoadHeroCard(1);
 
+        switch (PlayerHERO) {
+            case "ARMA":
+                Playercard= LoadHeroCard(1);
+                playerDeck = CreateDeck("ARMA");
+                Instantiate(ARMAdevpre, PlayerDevice, false);
+                break;
+            case "RAIKA":
+                Playercard = LoadHeroCard(2);
+                playerDeck = CreateDeck("RAIKA");
+                Instantiate(RAIKAdevpre, PlayerDevice, false);
+                break;
 
-        ICard Enemycard = LoadHeroCard(2);//02
-        ICard Playercard = LoadHeroCard(1);//ARMA
+        }
+
+        switch (EnemyHERO)
+        {
+            case "ARMA":
+                Enemycard = LoadHeroCard(1);
+                enemyDeck = CreateDeck("ARMA");
+                Instantiate(ARMAdevpre, EnemyDevice, false);
+                break;
+            case "RAIKA":
+                Enemycard = LoadHeroCard(2);
+                enemyDeck = CreateDeck("RAIKA");
+                Instantiate(RAIKAdevpre, EnemyDevice, false);
+                break;
+
+        }
+       
 
         CreateHero(PlayerHEROfield, Playercard);
         CreateHero(EnemyHEROfield, Enemycard);
 
 
-
-
-        playerDeck = CreateDeck("ARMA");
-        enemyDeck = CreateDeck("ZERO2");
+        
 
     }
 
     private Deck CreateDeck(string hero)
     {
         Deck deck = new Deck();
+        ICard card;
 
         //minionとmagicのカードをデッキに追加
-        for (int i = 1; i <= 3; i++)//3枚のミニオンを追加
+        for (int i = 1; i <= 5; i++)//3枚のミニオンを追加
         {
-            ICard card = LoadCard(hero, "minions", i);
+            card = LoadCard(hero, "minions", i);
             if (card != null) deck.AddCard(card);
         }
-        for (int i = 1; i <= 3; i++)//3枚のmagicを追加
+
+        //狼いっぱい入れたいという願い
+        card = LoadCard(hero, "minions", 1);
+        if (card != null) deck.AddCard(card);
+        card = LoadCard(hero, "minions", 1);
+        if (card != null) deck.AddCard(card);
+        card = LoadCard(hero, "minions", 1);
+        if (card != null) deck.AddCard(card);
+        for (int i = 1; i <= 5; i++)//3枚のmagicを追加
         {
-            ICard card = LoadCard(hero, "magics", i);
+            card = LoadCard(hero, "magics", i);
             if (card != null) deck.AddCard(card);
         }
         deck.Shuffle();//シャッフル
@@ -281,6 +330,9 @@ public class BattleManager : MonoBehaviour
     {
         //プレイヤーターンの処理
         Debug.Log("プレイヤーのターンです");
+
+
+
         manasys.AddMana(1);
         manasys.AddmaxMana(1);
         manasys.RestoreMana(PlayerCostframe);
@@ -502,17 +554,28 @@ public class BattleManager : MonoBehaviour
         while (iteration < maxiteration)
         {
 
+
+            while (isAnimating)//アニメーション中かどうか判断
+            {
+                yield return null;
+            }
             yield return StartCoroutine(EnemyCast());//キャスト出来るカードをキャストする処理
+            yield return new WaitForSeconds(0.3f);
+
+
+            while (isAnimating)
+            {
+                yield return null;
+            }
             yield return StartCoroutine(EnemyAttack());//攻撃できるカードで攻撃する処理
+            yield return new WaitForSeconds(0.3f);
             iteration += 1;
             Debug.Log($"iteration{iteration}");
+
         }
 
         EMatackflag = false;//全て初期の状態に戻す現状使ってないけど,後で使うかも
         EMcastflag = false;
-
-
-
 
 
 
@@ -549,12 +612,16 @@ public class BattleManager : MonoBehaviour
             //ドローする
 
             //ライカデバイス発動
-            RAIKAdevice.OnTurnStart();
+            if (PlayerHERO == "RAIKA")
+            {
+                RAIKAdevice.OnTurnStart();
+            }
+           
 
 
 
         }
-        else
+        else//相手のターン
         {
             //ドローする
 
@@ -569,7 +636,14 @@ public class BattleManager : MonoBehaviour
             }
             //ライカデバイス発動
 
+            Debug.Log($"EnemyHERO{EnemyHERO}");
 
+            if (EnemyHERO == "RAIKA")
+            {
+                RAIKAdevice.OnTurnStart();
+
+                Debug.Log("MoonTurnStart!");
+            }
 
         }
         TurnCalc();
@@ -583,7 +657,7 @@ public class BattleManager : MonoBehaviour
 
 
 
-    void CreateHand(Transform hand, ICard cardEntity)
+    public void CreateHand(Transform hand, ICard cardEntity)
     {
         CardController card;
         //一時的に親をデッキにする.

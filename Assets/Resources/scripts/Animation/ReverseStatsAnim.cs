@@ -2,13 +2,18 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
+
+//ARMAデバイスの攻守を反転する動作です．
+
 public class ReverseStatsAnim : MonoBehaviour
 {
+
     [SerializeField] private Transform HpText;
     [SerializeField] private Transform AtText;
     [SerializeField] private Transform pivot;
     public float ReverseDuration;
-
 
     
 

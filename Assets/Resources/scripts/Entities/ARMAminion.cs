@@ -9,6 +9,7 @@ public class ARMAminion:ScriptableObject, ICard
     public new string name;
     public int hp;
     public int at;
+    
     public int cost;
     public Sprite icon;
     public string cardType="Minion";

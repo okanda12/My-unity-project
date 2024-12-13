@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName ="lifesteal", menuName="Effects/lifesteal")]
-public class LifestealEffect : MinionEffect
+[CreateAssetMenu(fileName ="herolifeheal", menuName="Effects/Herolifeheal")]
+public class HeroLifeHeal : MinionEffect
 {
     public int healAmount;//回復量
     //public GameObject healEffectPrefab;
@@ -15,8 +15,10 @@ public class LifestealEffect : MinionEffect
 
         target.model.hp += healAmount; // 自ヒーローを回復
 
-        //ハートアニメーション
+        //ハートアニメーション/
         HeartAnimation animManager = target.GetComponent<HeartAnimation>();
+
+
         if (animManager != null)
         {
             animManager.PlayHealingAnimation(target.transform,healAmount);

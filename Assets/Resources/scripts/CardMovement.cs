@@ -25,6 +25,10 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
     private bool isDraggable;
 
 
+
+
+
+
     public void Awake()
     {
         canvas = GetComponentInParent<Canvas>();
@@ -68,7 +72,20 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
         //ドラッグ中に他のUIがクリック可能になる
         canvasGroup.blocksRaycasts = false;
-        canvasGroup.alpha = 0.8f;//少し透明に
+        //canvasGroup.alpha = 0.8f;//少し透明に
+
+        foreach (Transform daiza in BattleManager.Instance.PlayerFieldTransform)
+        {
+            if (daiza.childCount < 1)
+            {
+                Animator animator = daiza.GetComponent<Animator>();
+
+                animator.SetBool("chose", true);
+            }
+        }
+
+
+
     }
 
 
@@ -86,12 +103,7 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
 
         ///////////////////////////////
         //フィールドを発光させます
-        foreach (Transform daiza in BattleManager.Instance.PlayerFieldTransform)
-        {
-            Animator animator= daiza.GetComponent<Animator>();
-
-            animator.SetBool("chose", true);
-        }
+        
 
         ////////////////////////////
        
@@ -201,6 +213,21 @@ public class CardMovement : MonoBehaviour, IDragHandler, IBeginDragHandler, IEnd
         canvasGroup.alpha = 1f;
 
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

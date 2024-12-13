@@ -34,7 +34,7 @@ public class DropPlace : MonoBehaviour, IDropHandler
             //Debug.Log(card.defaultParent);
             
             //Debug.Log($"Card Dropped: {model.name}, AT: {model.at}, HP: {model.hp}, Cost: {model.cost}");
-            if (model.cost > BattleManager.Instance.Player_Mana || card.defaultParent == this.transform)
+            if (model.cost > BattleManager.Instance.Player_Mana || card.defaultParent == this.transform || BattleManager.Instance.isPlayerTurn==false)
             {//カードが出せない時
 
                 //親をhandにしたまま返す
