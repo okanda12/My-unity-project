@@ -180,7 +180,7 @@ public class BlockFilter : MonoBehaviour
         }
 
 
-
+        cutin.SetActive(false);
 
 
     }
@@ -204,6 +204,11 @@ public class BlockFilter : MonoBehaviour
         }
 
         Destroy(renderer.gameObject);
+
+
+       
+
+
     }
 
 

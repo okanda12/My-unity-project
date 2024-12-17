@@ -25,12 +25,17 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
     [SerializeField] GameObject Moon;//月
     [SerializeField] Transform Moonpivot;//月の中心
 
-    //アクティヴェートアニメーション
+
+
+    //Activated関連
     [SerializeField] GameObject Activatedobject;
     [SerializeField] float ActivatedDuration;
     [SerializeField] GameObject cupin; //きゅぴんエフェクト
 
 
+    [SerializeField] Image wakuimage;//更新,RAIKAデバイスの枠が変わります
+    [SerializeField] Sprite RAIKA_Activated_sprite;//更新後のsprite
+    
 
 
 
@@ -38,6 +43,7 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
 
 
     private bool Activated=false;//これがtrueになると相手の場も変えてしまう
+    private bool Activated_Anim = false;//これがfalseならアニメーション開始
 
     public float rotationDuration;
 
@@ -64,33 +70,20 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
     {
 
         currentTurn += 1;
-        StartCoroutine(TurnMoon());
 
-
-
-
-
-
-        if (Activated == false)
+        if (currentTurn >= rewardCost)
         {
-
-            if (BattleManager.Instance.PlayerHERO == "RAIKA")
-            {
-                ReverseStatsinField(PlayerField);
-            }
-            else
-            {
-                ReverseStatsinField(EnemyField);
-            }
-            
+            Activated = true;
 
         }
-        else
-        {   //activatedをtrueにする処理も必要
-            ReverseStatsinField(PlayerField);
-            ReverseStatsinField(EnemyField);
+        StartCoroutine(DeviceAnim());
 
-        }
+
+
+
+
+
+        
 
     }
 
@@ -135,20 +128,13 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
 
     }
 
-
     //子オブジェクトの月が回転します
     private IEnumerator TurnMoon()
     {
         Debug.Log($"TURN MOOOn");
         float elapsedTime = 0f;
         Quaternion ini = moontransform.rotation;
-        Quaternion end = Quaternion.Euler(0,0, currentTurn*180);
-        Quaternion endplus = Quaternion.Euler(0, 0,( currentTurn * 180)+10);
-
-
-        
-        
-        //月が回転するやつです
+        Quaternion end = Quaternion.Euler(0, 0, currentTurn * 180);
         while (elapsedTime < rotationDuration)
         {
             elapsedTime += Time.deltaTime;
@@ -161,23 +147,62 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
 
             yield return null;
         }
+    }
 
 
-        slider.value = (float)currentTurn/(float)rewardCost;//スライダー更新
+
+
+    private IEnumerator DeviceAnim()
+    {
+        
+        float elapsedTime = 0f;
+       
+        Quaternion endplus = Quaternion.Euler(0, 0,( currentTurn * 180)+10);
+
+
+        
+        //アクティヴェーション
+        if (Activated ==true && Activated_Anim==false)
+        {
+
+            
+            
+            Activated_Anim = true;
+
+            yield return StartCoroutine(ActivatedAnim());
+
+            
+
+        }
+
+        StartCoroutine(TurnMoon());
+        
+
+
+        slider.value = (float)currentTurn / (float)rewardCost;//スライダー更新
         //Debug.Log($"RAIKAs slider.value{slider.value}warizan{currentTurn / rewardCost}");
 
 
 
-        //アクティヴェーション
-        if (currentTurn >= rewardCost && Activated ==false)
+
+        if (Activated == false)
         {
 
-            
-            Activated = true;//アクティ米テッド
+            if (BattleManager.Instance.PlayerHERO == "RAIKA")
+            {
+                ReverseStatsinField(PlayerField);
+            }
+            else
+            {
+                ReverseStatsinField(EnemyField);
+            }
 
-            yield return StartCoroutine(Twomoon());
 
-            
+        }
+        else
+        {   //activatedをtrueにする処理も必要
+            ReverseStatsinField(PlayerField);
+            ReverseStatsinField(EnemyField);
 
         }
 
@@ -187,18 +212,19 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
 
 
 
-
-    public IEnumerator Twomoon()
+    //アクティヴェイテッドアニメションです
+    public IEnumerator ActivatedAnim()
     {
 
         BattleManager.Instance.isAnimating = true;//これがtrueだと相手の行動が止まる
 
-        Instantiate(cupin, transform);
+        
+        GameObject cupinobject=Instantiate(cupin, transform);
         yield return StartCoroutine(SpreadMoon());
 
         StartCoroutine(SpreadMoonRotate());
-        
 
+        Destroy(cupinobject);
         yield return new WaitForSeconds(1f);
 
         float t;
@@ -208,7 +234,7 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
         Transform RAIKATransform = RAIKA_modame.transform.Find("RAIKA");
 
         Transform EYETransform = RAIKATransform.Find("RAIKA_EYE");
-        Debug.Log(EYETransform);
+        //Debug.Log(EYETransform);
 
         Vector3 startPosition = RAIKATransform.localPosition;
         Vector3 startScale = RAIKATransform.localScale;
@@ -288,16 +314,59 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
         }
 
 
-        modemeflag = true;
+        Destroy(RAIKA_modame);
+
+        yield return StartCoroutine(ConvergeMoon());
+        
+
+
+
+        modemeflag = true;//近づくアニメーションが終わったflagです
+
+        
+
+
+        wakuimage.sprite = RAIKA_Activated_sprite;
+
+        cupinobject = Instantiate(cupin, transform);
+
+        
+
+        elapsedTime = 0f;
+        float spinDuration = 0.5f;
+        while (elapsedTime<spinDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / spinDuration;
+
+            this.transform.localRotation = Quaternion.Euler(0f, 360f*t, 0f );
+
+
+
+        }
+
+        this.transform.localRotation = Quaternion.Euler(0f,  0f, 0f);
+
+
+        yield return new WaitForSeconds(1f);
+
+
+
+
+
+
 
 
 
         BattleManager.Instance.isAnimating = false;//これがfalseだと相手が行動できる
 
-        Destroy(RAIKA_modame);
+        
 
 
     }
+
+
+
 
 
 
@@ -351,12 +420,14 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
         float r2 = 500f;
 
         int Moon1 = 15;
-        int Moon2 = 20;
+        int Moon2 = 15;
 
         //Moonpivotを中心に円形に配置
 
         Moonpivot.gameObject.SetActive(false);
 
+
+        //内苑
         for (int i=0; i<Moon1;i++ )
         {
             float angle = i * Mathf.PI * 2f / Moon1;//ラジアン 2π/moon1
@@ -370,6 +441,7 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
            
         }
 
+        //外苑
         for (int i=0;i<Moon2;i++)
         {
             float angle = i * Mathf.PI * 2f / Moon2;//ラジアン 2π/moon1
@@ -379,9 +451,14 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
             Vector3 localPosition = new Vector3(x, y, 0f);
 
             GameObject moonInstance = Instantiate(Moon, Moonpivot);
+
+            Image moonImage = moonInstance.GetComponent<Image>();
+
+
             moonInstance.transform.localPosition = localPosition;
-            
-            
+            moonImage.color = new Color(0.98f, 0.35f, 0.94f, 1.0f); // 赤色に変更
+
+
         }
 
         yield return new WaitForSeconds(0.5f);
@@ -409,13 +486,39 @@ public class RAIKAdevice : Herodevices, IPointerEnterHandler, IPointerExitHandle
         }
 
 
+    }
 
+    //出た月を収束させます
+    public IEnumerator ConvergeMoon()
+    {
+        Vector3 startScale = Moonpivot.localScale;
+
+
+        float elapsedTime = 0f;
+        float t = 0f;
+        float MoonSpreadDuration = 0.5f;
+
+        while (elapsedTime < MoonSpreadDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / MoonSpreadDuration;
+
+            Moonpivot.localScale = Vector3.Lerp(startScale, new Vector3(0.1f, 0.1f, 0.1f), t * t);
+            Moonpivot.localRotation = Quaternion.Euler(0f, 0f, 360 * t);
+
+            yield return null;
+
+        }
+
+        Moonpivot.gameObject.SetActive(false);
 
 
 
     }
 
 
+
+    //アクティヴェーション時,月が回り広がります
     public IEnumerator SpreadMoonRotate()
     {
         Quaternion startRotate = Moonpivot.localRotation;

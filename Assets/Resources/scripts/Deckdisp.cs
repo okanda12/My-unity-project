@@ -56,11 +56,11 @@ public class Deckdisp : MonoBehaviour,IPointerEnterHandler,IPointerExitHandler
 
     private void UpdateDeckText()
     {
-        if (isEnemyDeck==true)
+        if (isEnemyDeck==true && BattleManager.Instance.enemyDeck!=null)
         {
             deckText.text = $"Deck: {BattleManager.Instance.enemyDeck.DeckCount}";
         }
-        else 
+        else if(isEnemyDeck == false && BattleManager.Instance.playerDeck !=null)
         {
             deckText.text = $"Deck: {BattleManager.Instance.playerDeck.DeckCount}";
         }

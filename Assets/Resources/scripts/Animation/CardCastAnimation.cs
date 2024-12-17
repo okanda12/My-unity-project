@@ -158,7 +158,9 @@ public class CardCastAnimation : MonoBehaviour
         Vector3 EndPosition=defaultParent.position;
         Vector3 StartPosition;//マウスの位置を取得します
 
-        
+
+        //IgnoreLayout(BattleManager.Instance.EnemyHandTransform, false);
+
         //マウスの位置はワールド座標なのでローカルに変える必要がある．
 
         //Debug.Log($"defaultparent={defaultParent.name}");
@@ -178,6 +180,7 @@ public class CardCastAnimation : MonoBehaviour
         }
         else//相手が召喚するなら
         {
+            //ハンドのレイアウトは無視します
             IgnoreLayout(BattleManager.Instance.EnemyHandTransform, true);
             StartPosition = BattleManager.Instance.EnemyHandTransform.position;
             EndPosition = defaultParent.position;
@@ -187,28 +190,10 @@ public class CardCastAnimation : MonoBehaviour
         //Debug.Log("casting rotating4");
         //Debug.Log($"Start={StartPosition},End={EndPosition}");
 
+        StartCoroutine(CardRotating(StartPosition, EndPosition));
 
-        while (elapsedTime < CastDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / CastDuration;
+        
 
-            float rotation=Mathf.Lerp(0, 4*360, 4*t);//4回転
-
-            //一回移転するように
-
-
-            //Debug.Log(rotation);
-
-            rectTransform.rotation = Quaternion.Euler(0, rotation, 0);
-            rectTransform.position = Vector3.Lerp(StartPosition, EndPosition,1.5f*t);
-            //Debug.Log($"parent is {this.transform.parent}");
-
-            yield return null;
-
-        }
-
-        IgnoreLayout(BattleManager.Instance.EnemyHandTransform, false);
 
         transform.SetParent(defaultParent, false);
         rectTransform.localPosition = Vector3.zero;//なんかこれ無いと安定してくれない....
@@ -220,8 +205,41 @@ public class CardCastAnimation : MonoBehaviour
 
         //Debug.Log("casting rotating5");
 
+        yield return null;
 
 
+
+
+    }
+
+
+    public IEnumerator CardRotating(Vector3 StartPosition,Vector3 EndPosition)
+    {
+        float elapsedTime = 0f;
+
+
+        while (elapsedTime < CastDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / CastDuration;
+
+            float rotation = Mathf.Lerp(0, 4 * 360, 4 * t);//4回転
+
+            //一回移転するように
+
+
+            //Debug.Log(rotation);
+
+            rectTransform.rotation = Quaternion.Euler(0, rotation, 0);
+            rectTransform.position = Vector3.Lerp(StartPosition, EndPosition, 1.5f * t);
+            //Debug.Log($"parent is {this.transform.parent}");
+
+
+
+            yield return null;
+
+        }
+        IgnoreLayout(BattleManager.Instance.EnemyHandTransform, false);
 
     }
 

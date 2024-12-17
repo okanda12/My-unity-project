@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: c6ce69b320ff3894fa088554c389825f
+guid: 470a49067fb5fd040afab50aae615125
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -110,211 +110,85 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: devices_0
-      rect:
-        serializedVersion: 2
-        x: 6
-        y: 600
-        width: 200
-        height: 200
-      alignment: 9
-      pivot: {x: 0.47460437, y: 0.51640666}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: b7ee142143e2b5846aafe7a88b584341
-      internalID: 769987373
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: devices_1
-      rect:
-        serializedVersion: 2
-        x: 221
-        y: 600
-        width: 203
-        height: 200
-      alignment: 9
-      pivot: {x: 0.5059795, y: 0.5091522}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: ec6bc0d9eff4a2245818f52f4f9d58cf
-      internalID: -1333085187
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: devices_2
-      rect:
-        serializedVersion: 2
-        x: 431
-        y: 600
-        width: 201
-        height: 200
-      alignment: 9
-      pivot: {x: 0.49444854, y: 0.5139474}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 69c75ef444cec764191dccaba567ec38
-      internalID: 671964285
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: devices_3
+      name: ARMA_ANIM2-Sheet_0
       rect:
         serializedVersion: 2
         x: 0
-        y: 384
-        width: 201
-        height: 200
+        y: 0
+        width: 400
+        height: 400
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: f5e12bf382c895c49860fa2e8c41b2ee
-      internalID: 1588272246
+      spriteID: 92b2086257b248d4e9d769b0b3eb1960
+      internalID: -842495779
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: devices_4
+      name: ARMA_ANIM2-Sheet_1
       rect:
         serializedVersion: 2
-        x: 232
-        y: 384
-        width: 196
-        height: 200
+        x: 400
+        y: 0
+        width: 400
+        height: 400
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: 29a7257ad2232f54c96424ec36b07caf
-      internalID: 686499896
+      spriteID: 831e956ad711be344a3964383fe4a33b
+      internalID: 613258226
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: devices_5
+      name: ARMA_ANIM2-Sheet_2
       rect:
         serializedVersion: 2
-        x: 430
-        y: 369
-        width: 200
-        height: 200
+        x: 800
+        y: 0
+        width: 400
+        height: 400
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: dd35142e158356a47a129860a9b66616
-      internalID: -1433535815
+      spriteID: 89563e74169adf34aa05b57182da1661
+      internalID: 454072523
       vertices: []
       indices: 
       edges: []
       weights: []
     - serializedVersion: 2
-      name: devices_6
+      name: ARMA_ANIM2-Sheet_3
       rect:
         serializedVersion: 2
-        x: 1
-        y: 164
-        width: 201
-        height: 200
+        x: 1200
+        y: 0
+        width: 400
+        height: 400
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
       tessellationDetail: 0
       bones: []
-      spriteID: a0bf773bcb088054c9a5c09c3e058134
-      internalID: -2055115631
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: devices_7
-      rect:
-        serializedVersion: 2
-        x: 702
-        y: 598
-        width: 201
-        height: 200
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 04189f6b792760747b59e2b61ff9107a
-      internalID: -357564195
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: devices_8
-      rect:
-        serializedVersion: 2
-        x: 228
-        y: 152
-        width: 200
-        height: 213
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 73b8e35225a3b864297cbddd4acb658e
-      internalID: -1176237745
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: devices_9
-      rect:
-        serializedVersion: 2
-        x: 465
-        y: 158
-        width: 205
-        height: 205
-      alignment: 0
-      pivot: {x: 0.5, y: 0.5}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: 9a9e14de6d6966d408359031fc6e3f60
-      internalID: 2135440628
+      spriteID: 71f4147260ca55d4ea5c6b7935dfebf8
+      internalID: -1024505752
       vertices: []
       indices: 
       edges: []
@@ -330,16 +204,10 @@ TextureImporter:
     weights: []
     secondaryTextures: []
     nameFileIdTable:
-      devices_0: 769987373
-      devices_1: -1333085187
-      devices_2: 671964285
-      devices_3: 1588272246
-      devices_4: 686499896
-      devices_5: -1433535815
-      devices_6: -2055115631
-      devices_7: -357564195
-      devices_8: -1176237745
-      devices_9: 2135440628
+      ARMA_ANIM2-Sheet_0: -842495779
+      ARMA_ANIM2-Sheet_1: 613258226
+      ARMA_ANIM2-Sheet_2: 454072523
+      ARMA_ANIM2-Sheet_3: -1024505752
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
