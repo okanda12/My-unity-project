@@ -31,8 +31,11 @@ public class HeartAnimation : MonoBehaviour
         Vector3 endPosition = startPosition + new Vector3(0, 0.1f, 0); 
 
         TextMeshProUGUI hearttext = hearttextprefab.GetComponentInChildren<TextMeshProUGUI>();
-        //子オブジェクトから探す
+        
 
+
+
+        //ハートテキスト
         hearttext.text = healAmount.ToString();
 
         GameObject hearttextobject=Instantiate(hearttextprefab,HeartPosition,false);
@@ -57,7 +60,6 @@ public class HeartAnimation : MonoBehaviour
         for (int i=0;i<heartCount;i++)
         {
             //ハートを生成
-            //なんか最後の引数で親を設定しないとうまくいかないみたい
             GameObject heart = Instantiate(heartPrefab,targetTransform.position,Quaternion.identity, targetTransform);
 
             //ランダムな方向に飛ばす

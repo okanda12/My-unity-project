@@ -10,6 +10,8 @@ public class BattleManager : MonoBehaviour
     [SerializeField] CardController cardPrefab;
     [SerializeField] GameObject ARMAdevpre;
     [SerializeField] GameObject RAIKAdevpre;
+    [SerializeField] GameObject Result_Prefab;
+    
     //ヒーローのプレファブを入れる
     // [SerializeField] heroPrefab;
 
@@ -40,10 +42,13 @@ public class BattleManager : MonoBehaviour
     public int Enemy_Mana;
     public int Enemy_maxMana;
 
-    //manasystemとかの方が良くない？
+    //マナを管理する
     public Manasystem manasys;
 
 
+
+    public string Winner = "nobody";
+    public string Loser = "nobody";
 
     //特殊デバイス
     private RAIKAdevice RAIKAdevice;
@@ -63,6 +68,9 @@ public class BattleManager : MonoBehaviour
     public bool isAnimating = false;//アニメーション中かどうか判断
 
 
+    private bool EnemyCasted = false;//敵がカードを使ったか見る
+
+
     //シングルトンにするための呪文
     public static BattleManager Instance { get; private set; }
 
@@ -73,7 +81,7 @@ public class BattleManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -125,6 +133,20 @@ public class BattleManager : MonoBehaviour
         TurnCalc();
 
         RAIKAdevice = FindObjectOfType<RAIKAdevice>();
+    }
+
+
+
+    public void Result()
+    {
+
+        GameObject canvas = GameObject.Find("Canvas");
+        GameObject result = Instantiate(Result_Prefab, canvas.transform);
+
+
+
+
+
     }
 
 
@@ -334,7 +356,7 @@ public class BattleManager : MonoBehaviour
 
 
         manasys.AddMana(1);
-        manasys.AddmaxMana(1);
+        //manasys.AddEmptyMana(1);
         manasys.RestoreMana(PlayerCostframe);
 
         CardController[] PlayerFieldcardList = PlayerFieldTransform.GetComponentsInChildren<CardController>();
@@ -358,6 +380,8 @@ public class BattleManager : MonoBehaviour
     //敵のキャストセクション
     public IEnumerator EnemyCast()
     {
+        EnemyCasted = false;//カードを使ったか見ます
+        
         Debug.Log("Enemycast!");
 
         CardController[] EMhandCC = EnemyHandTransform.GetComponentsInChildren<CardController>();//ハンドのカードコントローラ
@@ -414,16 +438,21 @@ public class BattleManager : MonoBehaviour
                     if (card.model.cardType=="Magic")
                     {
                         StartCoroutine(castAnim.MagicCast(NocardDaiza[0]));
+                        
                     }
                     else
                     {
                         StartCoroutine(castAnim.MinionCast(NocardDaiza[0]));
                     }
-                    
+
+
+                    EnemyCasted = true;
+
+
                     cardCasted = true;
 
 
-                    yield return new WaitForSeconds(0.5f);
+                    //yield return new WaitForSeconds(0.5f);
                     break; // foreach を抜ける
 
 
@@ -529,7 +558,7 @@ public class BattleManager : MonoBehaviour
         //エネミーターンの処理
         Debug.Log("敵のターンです");
         manasys.AddMana(1);
-        manasys.AddmaxMana(1);
+        //manasys.AddEmptyMana(1);
         manasys.RestoreMana(EnemyCostframe);
 
         yield return new WaitForSeconds(1f);
@@ -560,7 +589,12 @@ public class BattleManager : MonoBehaviour
                 yield return null;
             }
             yield return StartCoroutine(EnemyCast());//キャスト出来るカードをキャストする処理
-            yield return new WaitForSeconds(0.3f);
+
+
+            if (EnemyCasted)//手札からカードを出した場合,
+            {
+                yield return new WaitForSeconds(1f);
+            }
 
 
             while (isAnimating)
@@ -568,7 +602,13 @@ public class BattleManager : MonoBehaviour
                 yield return null;
             }
             yield return StartCoroutine(EnemyAttack());//攻撃できるカードで攻撃する処理
-            yield return new WaitForSeconds(0.3f);
+
+            if (EnemyCasted)//手札からカードを出した場合,
+            {
+                yield return new WaitForSeconds(1f);
+            }
+
+
             iteration += 1;
             Debug.Log($"iteration{iteration}");
 

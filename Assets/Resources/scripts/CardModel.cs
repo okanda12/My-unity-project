@@ -43,6 +43,7 @@ public class CardModel
 
     public void BattleCry(CardController me, CardController target)
     {
+
         if (effects == null || effects.Length == 0) return;
 
         //ミニオンの校歌の適用
@@ -50,6 +51,9 @@ public class CardModel
         {
             effect.ApplyEffect(me, target);
         }
+
+
+
     }
 
 

@@ -172,6 +172,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: waku_3
+      rect:
+        serializedVersion: 2
+        x: 804
+        y: 68
+        width: 192
+        height: 236
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: e9c13fbfc5b3857479c79a4a80ad4474
+      internalID: 284470985
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -186,6 +207,7 @@ TextureImporter:
       waku_0: 1290988066
       waku_1: 52026439
       waku_2: 1554965818
+      waku_3: 284470985
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

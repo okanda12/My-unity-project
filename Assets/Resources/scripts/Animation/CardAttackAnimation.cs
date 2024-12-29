@@ -53,7 +53,7 @@ public class CardAttackAnimation : MonoBehaviour
         {
 
             elapsedTime += Time.deltaTime;
-            this.transform.position = startPosition + new Vector3(0.03f*Random.Range(-1f,1f),0.03f* Random.Range(-1f, 1f), 0);
+            this.transform.position = startPosition + new Vector3(0.05f*Random.Range(-1f,1f),0.05f* Random.Range(-1f, 1f), 0);
 
             yield return null;
         }
@@ -80,17 +80,35 @@ public class CardAttackAnimation : MonoBehaviour
 
 
 
+        Image image = Damagetextobject.GetComponent<Image>();
+        Color color = image.color;
 
 
 
 
+        float elapsedTime2 = 0f;
         float elapsedTime = 0f;
+        float t2 = 0f;
 
-
+        //ちょっと上に上がる
         while (elapsedTime < AttackedDuration)
         {
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / AttackedDuration;
+
+
+            //途中からふわ～っと透明に
+            if (elapsedTime > AttackedDuration / 2f)
+            {
+
+                elapsedTime2 += Time.deltaTime;
+                t2 = elapsedTime2 / (AttackedDuration / 2f);
+                color.a = 1 - t2;
+                image.color = color;
+
+            }
+
+
 
             if (Damagetextobject != null)
             {
@@ -118,14 +136,43 @@ public class CardAttackAnimation : MonoBehaviour
 
             //ダメージを受けます
             Model.hp -= damage;
+            View.Show(Model);
+
             if (Model.hp <= 0)
             {
+               
+
+                if (Model.cardType=="Hero")//ヒーローが死んだとき
+                {
+
+                    if (Model.name==BattleManager.Instance.PlayerHERO)//
+                    {
+                        BattleManager.Instance.Winner = BattleManager.Instance.EnemyHERO;
+                    }
+                    else
+                    {
+                        BattleManager.Instance.Winner = BattleManager.Instance.PlayerHERO;
+                    }
+
+
+
+
+
+                  //勝者の名前取得
+                  ;
+
+                    BattleManager.Instance.Result();
+
+
+
+                }
+
                 StartCoroutine(Die());
 
             }
 
             
-            View.Show(Model);
+           
         }
 
     }
@@ -146,10 +193,12 @@ public class CardAttackAnimation : MonoBehaviour
   
     public IEnumerator Die()
     {
+        
+
+       GameObject banisher=Instantiate(banish, transform);
 
 
-        GameObject banisher=Instantiate(banish, transform);
-
+        yield return StartCoroutine(ble());
 
         yield return new WaitForSeconds(0.5f);
 
@@ -281,11 +330,11 @@ public class CardAttackAnimation : MonoBehaviour
         
         
         StartCoroutine(targetAnim.GetDamage(fromCard.model.at));//相手に受けさせたい
-        StartCoroutine(GetDamage(targetCard.model.at));//自分が受ける
+        yield return StartCoroutine(GetDamage(targetCard.model.at));//自分が受ける
 
         yield return new WaitForSeconds(0.2f);//なんかこれじゅうようやね
 
-
+        
         /////////////////////////////////
         //アタック帰り
         elapsedTime = 0f;
@@ -309,12 +358,13 @@ public class CardAttackAnimation : MonoBehaviour
         rectTransform.position = startPosition;
         rectTransform.rotation = startRotation;
 
-        IgnoreLayout(from,false);
+        
         this.transform.SetParent(defaultparent, true);
         Debug.Log($"defaultParent{defaultparent}");
 
         //yield return new WaitForSeconds(AttackDurationGO+AttackDurationBack);
         fromCard.canAttack = false;
+        View.Show(Model);
 
     }
 }

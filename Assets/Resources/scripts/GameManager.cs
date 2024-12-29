@@ -7,7 +7,12 @@ public class GameManager : MonoBehaviour
 {
 
 
-    [SerializeField] private BlockFilter blockFilter;//フェードのスクリプト
+    //[SerializeField] private GameObject Fade;//フェードのプレファブ
+    private GameObject FadeObject;
+    private BlockFilter FadeObject_script;
+
+
+    //[SerializeField] private BlockFilter blockFilter;//フェードのスクリプト
 
     //シングルトンにするための呪文
     public static GameManager Instance { get; private set; }
@@ -16,60 +21,107 @@ public class GameManager : MonoBehaviour
 
     private void Awake()
     {
-
-        
+        //DontDestroyOnLoad(gameObject);
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
+            //gameObject.SetActive(true);
         }
-        else
+        else if (Instance != this)
         {
-            Destroy(gameObject);
+            Debug.LogWarning("Duplicate GameManager detected, destroying this instance.");
+            Destroy(gameObject); // 重複するインスタンスを破棄
         }
-
         
-    }
-    //
-
-    public void ToSelectionPhase()
-    {
-        if (blockFilter != null)
-        {
-            blockFilter.StartFillingAnimation();
-            StartCoroutine(PlayAnimationAndLoadScene());
-        }
-        else
-        {
-            Debug.Log("cantfind clockfilter ");
-        }
-
-       // SceneManager.LoadScene("BattleScene");
-
         
     }
 
-
-    private IEnumerator PlayAnimationAndLoadScene()
+    private void Start()
     {
-        blockFilter.StartFillingAnimation(); // アニメーション開始
 
-        // アニメーションの完了まで待機 (必要に応じて秒数を変更)
-        while (sceneGO==false)
+        FadeObject = GameObject.Find("Fade");
+        FadeObject_script = FadeObject.GetComponent<BlockFilter>();
+
+
+        if (FadeObject_script)
         {
-            yield return null;
+            Debug.Log("fadeobject finded!");
+            //StartCoroutine(PlayAnimation_LoadTownScene());
+
         }
+        else if(!FadeObject_script)
+        {
+            Debug.Log("cantfind fadeobject");
+        }
+
+
+    }
+
+    private void Update()
+    {
+        
+
+
+
+
+
+
+
+
+    }
+
+
+    //街画面へ移る
+    public void ToTown()
+    {
+        FadeObject = GameObject.Find("Fade");
+        //FadeObject = Fade;
+        FadeObject_script = FadeObject.GetComponent<BlockFilter>();
 
        
 
-        // シーン遷移
-        SceneManager.LoadScene("BattleScene");
+        if (FadeObject_script)
+        {
+            Debug.Log("Starting Coroutine...");
+            FadeObject_script.StartLoadScene1("TownScene");
+
+        }
+        else
+        {
+            Debug.LogError("FadeObject_script not found or null.");
+        }
+    
+
+    }
 
 
+
+    //バトル画面へ移る
+    public void ToBattle()
+    {
+        FadeObject = GameObject.Find("Fade"); 
+        //FadeObject = Fade;
+        FadeObject_script = FadeObject.GetComponent<BlockFilter>();
+
+
+        if (FadeObject_script)
+        {
+            Debug.Log("Starting Coroutine...");
+            FadeObject_script.StartLoadScene1("BattleScene");
+
+        }
+        else
+        {
+            Debug.LogError("FadeObject_script not found or null.");
+        }
 
 
     }
 
+
+
+   
 
 
 }

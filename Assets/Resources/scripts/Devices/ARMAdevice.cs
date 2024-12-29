@@ -18,9 +18,16 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
     [SerializeField] private TextMeshProUGUI ARMAtext;//類型コストを表示します.
     [SerializeField] Slider slider;//ARMAデバイスの横のスライダー
 
+
     //Activated関連
     private bool Activated_Anim = false;//これがfalseのままコストが達するとアニメーション開始
     private bool Animlast = false;//アニメのラストを検出するフラッグです
+
+
+    [SerializeField] GameObject kurukuru;//くるくるエフェクト
+
+
+    //Activate時使用
     [SerializeField] GameObject cupin;//きゅぴんエフェクト
     [SerializeField] Transform Wing_pivot;//羽根の中心
     [SerializeField] GameObject wing_prefab;//羽根
@@ -44,7 +51,7 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
     public bool isARMAinCloud = false;
 
     public float rotationDuration;
-
+    private bool deviceGO = false;
     
 
 
@@ -61,6 +68,7 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
         slider.value = 0;
     }
 
+    
     //
     public void AddCost(int cost)
     {
@@ -69,6 +77,9 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
 
         StartCoroutine(hanerotation());//羽根回転モーション
+
+        StartCoroutine(kurukurumotion(cost));//コストが飛んでいきます
+
 
         if (currentCost >= rewardCost　&& Activated_Anim==false)
         {
@@ -87,6 +98,55 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
     }
 
+    public IEnumerator kurukurumotion(int cost)
+    {
+        GameObject kurukuru_object = Instantiate(kurukuru,transform);
+        Vector3 StartPosition = this.transform.position;
+        Vector3 EndPosition =StartPosition + new Vector3(0, 0.1f, 0);
+
+        TextMeshProUGUI kurukuruObject_txt = kurukuru_object.GetComponentInChildren<TextMeshProUGUI>();
+        kurukuruObject_txt.text = cost.ToString();
+
+
+        float kurukuruDuration = 1f;
+        float elapsedTime = 0f;
+        float elapsedTime2 = 0f;
+        float t;
+        float t2;
+
+
+        Image image = kurukuru_object.GetComponent<Image>();
+        Color color = image.color;
+
+        while (elapsedTime <kurukuruDuration)
+        {
+            t = elapsedTime / kurukuruDuration;
+            elapsedTime += Time.deltaTime;
+
+            //半分の時間から透明に
+            if(elapsedTime > kurukuruDuration / 2f)
+            {
+                
+                elapsedTime2 += Time.deltaTime;
+                t2 = elapsedTime2 / (kurukuruDuration / 2f);
+                color.a = 1 - t2;
+                image.color = color;
+
+            }
+            //透明度変更
+            
+
+            kurukuru_object.transform.position = Vector3.Lerp(StartPosition, EndPosition, t);
+            yield return null;
+        }
+
+        Destroy(kurukuru_object);
+
+
+
+
+    }
+
 
     public IEnumerator ActivatedAnim()
     {
@@ -101,8 +161,9 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
         
         //フェード出現
         GameObject ARMA_fadeobject = Instantiate(ARMA_fade, null);
+
         //デバイス発生,アニメーション後に上にびゅ～ん
-        yield return StartCoroutine(DeviceSoaring(ARMA_fadeobject));
+        
 
         //フェード内のオブジェクトを全て取得
         Transform cloud_1_1 = ARMA_fadeobject.transform.Find("cloud1_1");
@@ -137,15 +198,17 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
         StartCoroutine(Cloudflow(cloud_2_1, 8f));
         StartCoroutine(Cloudflow(cloud_2_3, 3f));
 
-        yield return new WaitForSeconds(1f);
+        yield return StartCoroutine(DeviceSoaring(ARMA_fadeobject));
+
+        //yield return new WaitForSeconds(f);
 
        
         StartCoroutine(DEVICEin(ARMA_device));
 
         //yield return new WaitForSeconds(f);
 
-        StartCoroutine(ARMAin(ARMA));
-        slow = 0.1f;
+        StartCoroutine(ARMAin(ARMA,ARMA_device));
+       
 
         yield return new WaitForSeconds(1.2f);
 
@@ -153,9 +216,21 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
         isARMAinCloud = true;
         yield return new WaitForSeconds(0.1f);
 
+
+        deviceGO = true;
+
+
+        GameObject canvas = GameObject.Find("Canvas");
+        ARMA_device.SetParent(canvas.transform,true);
+
         Destroy(ARMA_fadeobject);
+        
         yield return StartCoroutine(ConvergeWing());
         //yield return StartCoroutine();
+
+
+
+
 
 
 
@@ -163,7 +238,6 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
         backimage.sprite = ARMA_Activated_sprite_back;
         haneimage.sprite = ARMA_Activated_sprite_hane;
         
-
 
         StartCoroutine(cupinAnim());//きゅぴんっ
 
@@ -197,6 +271,7 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
         }
 
+
         Wing_pivot.gameObject.SetActive(false);
 
 
@@ -223,16 +298,76 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
             ARMA_device.localPosition = Vector3.Lerp(startPosition, endPosition, t);
 
 
+            Debug.Log(ARMA_device.localPosition);
 
             yield return null;
         }
+
+        //DontDestroyOnLoad(ARMA_device);
+
+
+        //ゆっくり移動
+        startPosition = ARMA_device.localPosition;
+        endPosition = Wing_pivot.position;
+
+        elapsedTime = 0f;
+        float Duration = 50f;
+
+        while (!deviceGO)
+        {
+            Debug.Log(ARMA_device.localPosition);
+
+
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / Duration;
+            ARMA_device.localPosition = Vector3.Lerp(startPosition, endPosition, t);
+
+            if (elapsedTime > 5f)//無限ループ回避
+            {
+                deviceGO = true;
+            }
+            yield return null;
+
+        }
+
+        
+        startPosition = ARMA_device.localPosition;
+        GameObject endobject = GameObject.Find("PlayerDevice");
+        endPosition = endobject.transform.localPosition;
+
+        Vector3 startScale= ARMA_device.localScale;
+        Vector3 endScale = new Vector3(0f, 0f, 0f);
+
+        
+
+
+
+        elapsedTime = 0;
+        Duration=0.2f;
+
+        while (elapsedTime<Duration)
+        {
+           
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / Duration;
+            ARMA_device.localPosition = Vector3.Lerp(startPosition, endPosition, t);
+            ARMA_device.localScale= Vector3.Lerp(startScale, endScale, t);
+
+            yield return null;
+        }
+
+        Destroy(ARMA_device.gameObject);
+
+
+
+
 
     
     }
 
 
 
-    public IEnumerator ARMAin(Transform ARMA)
+    public IEnumerator ARMAin(Transform ARMA,Transform ARMA_device)
     {
         Vector3 startPosition = ARMA.localPosition;
         Vector3 endPosition = ARMA.localPosition;
@@ -252,15 +387,21 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
             ARMA.localPosition = Vector3.Lerp(startPosition, endPosition, t*t);
 
+            if (ARMA.localPosition.x>ARMA_device.localPosition.x)
+            {
+                slow = 0.1f;
+                
+            }
 
 
             yield return null;
         }
 
+
         }
 
 
-        public IEnumerator Cloudflow(Transform cloud, float cloudDuration)
+    public IEnumerator Cloudflow(Transform cloud, float cloudDuration)
     {
         
         Vector3 startPosition =cloud.localPosition;
@@ -316,17 +457,36 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
         Vector3 startScale = Wing_pivot.localScale;
         Debug.Log("SpreadWing!!");
 
-        float r1 = 300f;
+        float r1 = 50f;
+        float r2 = 100f;
+        float r3 = 200f;
+        float r4 = 300f;
+        float r5 = 400f;
 
-        int wing_number = 20;//設置する羽根の個数
+        float r6 = 500f;
+        float r7 = 600f;
+        float r8 = 800f;
+
+
+        int wing_number1 = 10;//設置する羽根の個数
+        int wing_number2 = 30;//設置する羽根の個数
+        int wing_number3 = 50;//設置する羽根の個数
+        int wing_number4 = 70;//設置する羽根の個数
+        int wing_number5 = 90;//設置する羽根の個数
+
+        int wing_number6 = 90;//設置する羽根の個数
+        int wing_number7 = 70;//設置する羽根の個数
+        int wing_number8 = 50;//設置する羽根の個数
+        
+
 
         //Wing_pivotを中心に円形に配置
         Wing_pivot.gameObject.SetActive(false);
 
         //羽根を配置する
-        for(int i=0;i<wing_number;i++)
+        for(int i=0;i<wing_number1;i++)
         {
-            float angle = i * Mathf.PI * 2f / wing_number;
+            float angle = i * Mathf.PI * 2f / wing_number1;
             float x = Mathf.Cos(angle) * r1;
             float y = Mathf.Sin(angle) * r1;
 
@@ -337,7 +497,106 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
         }
 
-        yield return new WaitForSeconds(0.1f);
+        for (int i = 0; i < wing_number2; i++)
+        {
+            float angle = i * Mathf.PI * 2f / wing_number2;
+            float x = Mathf.Cos(angle) * r2;
+            float y = Mathf.Sin(angle) * r2;
+
+            Vector3 localPosition = new Vector3(x, y, 0f);
+
+            GameObject wingInstance = Instantiate(wing_prefab, Wing_pivot);
+            wingInstance.transform.localPosition = localPosition;
+
+        }
+
+        for (int i = 0; i < wing_number3; i++)
+        {
+            float angle = i * Mathf.PI * 2f / wing_number3;
+            float x = Mathf.Cos(angle) * r3;
+            float y = Mathf.Sin(angle) * r3;
+
+            Vector3 localPosition = new Vector3(x, y, 0f);
+
+            GameObject wingInstance = Instantiate(wing_prefab, Wing_pivot);
+            wingInstance.transform.localPosition = localPosition;
+
+        }
+
+        for (int i = 0; i < wing_number4; i++)
+        {
+            float angle = i * Mathf.PI * 2f / wing_number4;
+            float x = Mathf.Cos(angle) * r4;
+            float y = Mathf.Sin(angle) * r4;
+
+            Vector3 localPosition = new Vector3(x, y, 0f);
+
+            GameObject wingInstance = Instantiate(wing_prefab, Wing_pivot);
+            wingInstance.transform.localPosition = localPosition;
+
+        }
+
+
+        for (int i = 0; i < wing_number5; i++)
+        {
+            float angle = i * Mathf.PI * 2f / wing_number5;
+            float x = Mathf.Cos(angle) * r5;
+            float y = Mathf.Sin(angle) * r5;
+
+            Vector3 localPosition = new Vector3(x, y, 0f);
+
+            GameObject wingInstance = Instantiate(wing_prefab, Wing_pivot);
+            wingInstance.transform.localPosition = localPosition;
+
+        }
+
+        for (int i = 0; i < wing_number6; i++)
+        {
+            float angle = i * Mathf.PI * 2f / wing_number6;
+            float x = Mathf.Cos(angle) * r6;
+            float y = Mathf.Sin(angle) * r6;
+
+            Vector3 localPosition = new Vector3(x, y, 0f);
+
+            GameObject wingInstance = Instantiate(wing_prefab, Wing_pivot);
+            wingInstance.transform.localPosition = localPosition;
+
+        }
+
+        for (int i = 0; i < wing_number7; i++)
+        {
+            float angle = i * Mathf.PI * 2f / wing_number7;
+            float x = Mathf.Cos(angle) * r7;
+            float y = Mathf.Sin(angle) * r7;
+
+            Vector3 localPosition = new Vector3(x, y, 0f);
+
+
+            GameObject wingInstance = Instantiate(wing_prefab, Wing_pivot);
+            wingInstance.transform.localPosition = localPosition;
+            wingInstance.transform.localScale = new Vector3(1.4f, 1.4f, 1f);
+
+        }
+
+        for (int i = 0; i < wing_number8; i++)
+        {
+            float angle = i * Mathf.PI * 2f / wing_number8;
+            float x = Mathf.Cos(angle) * r8;
+            float y = Mathf.Sin(angle) * r8;
+
+            Vector3 localPosition = new Vector3(x, y, 0f);
+
+
+            GameObject wingInstance = Instantiate(wing_prefab, Wing_pivot);
+            wingInstance.transform.localPosition = localPosition;
+            wingInstance.transform.localScale = new Vector3(2.5f, 2.5f, 1f);
+
+        }
+
+
+
+
+        yield return new WaitForSeconds(0.2f);
 
 
 
@@ -391,18 +650,63 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
     //ARMA_device1_Animが発生し,上昇します.
     public IEnumerator DeviceSoaring(GameObject ARMA_fadeobject)
     {
+
+        
         //デバイス発生.アニメーションが勝手に回ります.
         //アニメーションは　展開→せんぷうき回る(無限ループ)
-        GameObject ARMA_device1_Anim = Instantiate(ARMA_device1, ARMA_fadeobject.transform);
+        GameObject ARMA_device1_object = Instantiate(ARMA_device1, ARMA_fadeobject.transform);
+
+        Vector3 startPosition = this.transform.position;
+        Vector3 endPosition = ARMA_fadeobject.transform.position;
+
+       
+
+
+        //最初はめっちゃちっちゃく
+        ARMA_device1_object.transform.localScale = new Vector3(0f, 0f, 0f);
+        Vector3 startScale = ARMA_device1_object.transform.localScale;
+        Vector3 endScale = new Vector3(1f, 1f, 1f);
+
+
+        
+
+        Animator ARMA_device1_Anim= ARMA_device1_object.GetComponent<Animator>();
+
+
+        float elapsedTime = 0f;
+        float t;
+        float Duration = 0.3f;
+
+        //デバイスから中心に近づいていく処理　徐々に大きくなる
+        while (elapsedTime < Duration)
+        {
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / Duration;
+
+            ARMA_device1_object.transform.position = Vector3.Lerp(startPosition, endPosition,  t);
+            ARMA_device1_object.transform.localScale = Vector3.Lerp(startScale, endScale, t);
+
+            //Debug.Log(ARMA_device1_object.transform.localScale);
+            yield return null;
+
+        }
+
+
+        ARMA_device1_Anim.SetTrigger("start");
+
+
+
 
         yield return new WaitForSeconds(2f);
 
-        float elapsedTime = 0f;
+        
         float soaringDuration = 2f;
-        float t;
+        
+        
+        elapsedTime = 0f;
 
-        Vector3 startPositon = ARMA_device1_Anim.transform.localPosition;
-        Vector3 endPositon = startPositon + new Vector3(10f, 10f, 0);
+        startPosition = ARMA_device1_object.transform.localPosition;
+        endPosition = startPosition + new Vector3(10f, 10f, 0);
 
 
         while (elapsedTime < soaringDuration)
@@ -410,7 +714,7 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
             elapsedTime += Time.deltaTime;
             t = elapsedTime / soaringDuration;
 
-            ARMA_device1_Anim.transform.position = Vector3.Lerp(startPositon, endPositon, 4*t*t);
+            ARMA_device1_Anim.transform.position = Vector3.Lerp(startPosition, endPosition, 4*t*t);
             yield return null;
 
         }

@@ -17,7 +17,7 @@ public class RestoreCost : MinionEffect
 
 
 
-        BattleManager.Instance.manasys.AddmaxMana(RestoreAmount);
+        BattleManager.Instance.manasys.AddEmptyMana(RestoreAmount);
 
 
     }

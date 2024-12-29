@@ -22,6 +22,8 @@ public class CardCastAnimation : MonoBehaviour
     private CanvasGroup canvasGroup;
 
 
+    [SerializeField] GameObject RotateEffect;//回転するときにでるエフェクトです
+
 
 
 
@@ -83,7 +85,7 @@ public class CardCastAnimation : MonoBehaviour
             elapsedTime += Time.deltaTime;
             t = elapsedTime / CastDuration;
 
-            float rotation = Mathf.Lerp(0, 4 * 360, 4 * t);//4回転
+            float rotation = Mathf.Lerp(0,  360, 4 * t);//4回転
 
      
             
@@ -158,6 +160,10 @@ public class CardCastAnimation : MonoBehaviour
         Vector3 EndPosition=defaultParent.position;
         Vector3 StartPosition;//マウスの位置を取得します
 
+        Vector3 StartScale=this.transform.localScale;
+        Vector3 EndScale = StartScale * 1.2f ;
+
+
 
         //IgnoreLayout(BattleManager.Instance.EnemyHandTransform, false);
 
@@ -171,9 +177,10 @@ public class CardCastAnimation : MonoBehaviour
         bool isPlayerTurn = BattleManager.Instance.isPlayerTurn;
 
         
-        //
+        //始まりと終わりを設定します
         if (isPlayerTurn==true)
         {
+
             StartPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             EndPosition = defaultParent.position;
             //Debug.Log("casting rotating2");
@@ -187,19 +194,33 @@ public class CardCastAnimation : MonoBehaviour
             //Debug.Log("casting rotating3");
         }
 
+        StartScale = this.transform.localScale;
+        EndScale = StartScale*1.3f;
+
+
         //Debug.Log("casting rotating4");
         //Debug.Log($"Start={StartPosition},End={EndPosition}");
 
-        StartCoroutine(CardRotating(StartPosition, EndPosition));
+        //カードを出します
 
-        
+        yield return StartCoroutine(CardRotating(StartPosition, EndPosition,StartScale,EndScale));
+       
+
 
 
         transform.SetParent(defaultParent, false);
-        rectTransform.localPosition = Vector3.zero;//なんかこれ無いと安定してくれない....
 
+
+
+
+
+        rectTransform.localPosition = Vector3.zero;//なんかこれ無いと安定してくれない....
+        //場に出した時にちょっと邪魔なので名前を消します
+        cardcon.view.Show(cardcon.model);
 
         //yield return new WaitForSeconds(CastDuration);
+
+       
 
         cardcon.model.BattleCry(cardcon, BattleManager.Instance.PlayerHerocon);
 
@@ -213,34 +234,102 @@ public class CardCastAnimation : MonoBehaviour
     }
 
 
-    public IEnumerator CardRotating(Vector3 StartPosition,Vector3 EndPosition)
+    //カードを回転させ,見せながら台座に設置します．
+
+    public IEnumerator CardRotating(Vector3 StartPosition,Vector3 EndPosition, Vector3 StartScale, Vector3 EndScale)
     {
         float elapsedTime = 0f;
+        float elapsedTime2 = 0f;//拡大縮小で使います
+        float t = 0f;
 
+        //回転エフェクトを出します.
+        GameObject rotateEffect = Instantiate(RotateEffect, transform);
 
-        while (elapsedTime < CastDuration)
+        //回転し,拡大する
+        float go = 0.5f*CastDuration;
+        while (elapsedTime < go)//途中まで
         {
             elapsedTime += Time.deltaTime;
-            float t = elapsedTime / CastDuration;
+            t = elapsedTime / CastDuration;
 
-            float rotation = Mathf.Lerp(0, 4 * 360, 4 * t);//4回転
+            float rotation = Mathf.Lerp(0,  7*360, t);//4回転
+
+          
+
+            //Debug.Log(rotation);
+
+            this.transform.localScale = Vector3.Lerp(StartScale, EndScale, t);
+            rectTransform.rotation = Quaternion.Euler(0, rotation, 0);
+            rectTransform.position = Vector3.Lerp(StartPosition, EndPosition,  t);
+            //Debug.Log($"parent is {this.transform.parent}");
+
+            yield return null;
+
+        }
+
+
+
+
+        //一瞬止まってミセル
+        rectTransform.rotation = Quaternion.Euler(0, 0, 0);
+        EndScale = this.transform.localScale;
+        Vector3 EndScale2 = 1.08f * EndScale;
+        elapsedTime = 0;
+        float stopDuration = 0.2f;//壱秒くらい？
+        while (elapsedTime < stopDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / stopDuration;
+
+            //float rotation = Mathf.Lerp(0, 7 * 360, t);//4回転
 
             //一回移転するように
 
 
             //Debug.Log(rotation);
+            this.transform.localScale = Vector3.Lerp(EndScale, EndScale2, t);
+            
+            yield return null;
 
-            rectTransform.rotation = Quaternion.Euler(0, rotation, 0);
-            rectTransform.position = Vector3.Lerp(StartPosition, EndPosition, 1.5f * t);
-            //Debug.Log($"parent is {this.transform.parent}");
+        }
 
+
+        Destroy(rotateEffect);
+        //一気に台座に収まる
+
+        //現在のtransform
+        StartPosition = this.transform.position;
+
+
+        elapsedTime = 0;
+        float daizaDuration = 0.1f;
+        
+        while (elapsedTime < daizaDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / daizaDuration;
+
+          
+
+            //Debug.Log(rotation);
+            this.transform.localScale = Vector3.Lerp(EndScale2, StartScale, t);
+            rectTransform.position = Vector3.Lerp(StartPosition, EndPosition, t);
 
 
             yield return null;
 
         }
-        IgnoreLayout(BattleManager.Instance.EnemyHandTransform, false);
 
+
+
+
+
+
+
+        
+       
+        IgnoreLayout(BattleManager.Instance.EnemyHandTransform, false);
+       
     }
 
     public IEnumerator cantMinionCast(Transform defaultParent)

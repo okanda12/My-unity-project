@@ -126,6 +126,8 @@ public class Manasystem : MonoBehaviour
         
     }
 
+
+    //–ƒ–ë‚ğˆêŒÂ‘‚â‚µ‚Ü‚·
     public void AddMana(int cost)
     {
         Animator animator = manaPrefab.GetComponent<Animator>();
@@ -133,6 +135,7 @@ public class Manasystem : MonoBehaviour
         if (BattleManager.Instance.isPlayerTurn == true)
         {
             Player_Mana += cost;
+            Player_maxMana += cost;
             Instantiate(manaPrefab,BattleManager.Instance.PlayerCostframe, false);
             animator.SetBool("create",true);//©“®“I‚Écreate‚³‚ê‚é‚©‚ç‚¢‚ç‚È‚Á‚½‚í
             //animator.SetBool("shining", true);
@@ -141,20 +144,32 @@ public class Manasystem : MonoBehaviour
         else
         {
             Enemy_Mana += cost;
+            Enemy_maxMana += cost;
             Instantiate(manaPrefab, BattleManager.Instance.EnemyCostframe, false);
             //animator.SetTrigger("Create");
         }
 
     }
-    public void AddmaxMana(int cost)
+    public void AddEmptyMana(int cost)
     {
+        Animator animator = manaPrefab.GetComponent<Animator>();
+
         if (BattleManager.Instance.isPlayerTurn == true)
         {
             Player_maxMana += cost;
+            
+            Instantiate(manaPrefab, BattleManager.Instance.PlayerCostframe, false); 
+            animator.SetBool("used", true);
+            animator.SetBool("create", false);
+
         }
         else
         {
             Enemy_maxMana += cost;
+
+            Instantiate(manaPrefab, BattleManager.Instance.EnemyCostframe, false);
+            animator.SetBool("used", true);
+            animator.SetBool("create", false);
         }
 
     }

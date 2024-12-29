@@ -8,8 +8,6 @@ using TMPro;
 //カードの見た目をきめるスクリプトです.
 //cardcontrollerとcardmodelとcardviewがあります.
 
-
-
 public class CardView : MonoBehaviour
 {
     [SerializeField] TextMeshProUGUI nameText, hpText, atText, cosText;
@@ -36,7 +34,6 @@ public class CardView : MonoBehaviour
             waku.sprite = frame.Heroframe;
 
 
-
             //スプライトsizeに合わせてrecttransformを変更
 
             AdjustImagetoSprite(iconImage);
@@ -47,14 +44,14 @@ public class CardView : MonoBehaviour
             //ダメージを受けていたらテキストを赤く
             if (cardModel.hp < cardModel.maxhp)
             {
-                hpText.color = new Color(0.9f, 0.2f, 0.2f, 0.8f);
+                hpText.color = new Color(0.9f, 0.2f, 0.2f, 1f);
             }
 
-            //増強していたら緑色に
+            //増強していたら白色に
 
             if (cardModel.hp > cardModel.maxhp)
             {
-                hpText.color = new Color(1.0f, 1.0f, 1.0f, 0.8f);
+                hpText.color = new Color(0.5f, 1.0f, 0.5f, 1f);
             }
 
 
@@ -71,14 +68,37 @@ public class CardView : MonoBehaviour
             //ダメージを受けていたらテキストを赤く
             if (cardModel.hp < cardModel.maxhp)
             {
-                hpText.color = new Color(0.9f, 0.2f, 0.2f, 0.8f);
+                hpText.color = new Color(0.9f, 0.2f, 0.2f, 1f);
             }
 
             //増強していたら緑色に
             if (cardModel.hp > cardModel.maxhp)
             {
-                hpText.color = new Color(1.0f, 1.0f, 1.0f, 0.8f);
+                hpText.color = new Color(0.5f, 1.0f, 0.5f, 1f);
             }
+
+
+            //親の親オブジェクトをチェック
+            Transform parent = transform.parent;
+            if (parent != null && parent.parent != null)
+            {
+                Transform grandparent = parent.parent;
+
+
+                //場にいるときは邪魔なので名前を削除
+                if (grandparent.name=="PlayerField" || grandparent.name=="EnemyField")
+                {
+                    
+                    nameText.text = null;
+                    Dot.enabled= false;
+                    cosText.text = null;
+                }
+
+            }
+
+
+
+
 
         }
         else if (cardModel.cardType == "Magic")
