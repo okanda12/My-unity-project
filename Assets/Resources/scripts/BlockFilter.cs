@@ -73,7 +73,7 @@ public class BlockFilter : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(nextsceneflag);
+       // Debug.Log(nextsceneflag);
     }
 
 
@@ -215,6 +215,7 @@ public class BlockFilter : MonoBehaviour
             float y = Mathf.Sin(angle) * r_wood;
 
             Vector3 localPosition = new Vector3(x, y, 0f);
+
 
             GameObject woodInstance = Instantiate(WoodPrefab,Woodpivot.transform);
             woodInstance.transform.localPosition = localPosition;

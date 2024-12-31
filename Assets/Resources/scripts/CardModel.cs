@@ -11,6 +11,7 @@ public class CardModel
     public int cost;
     public Sprite icon;
     public string cardType;
+    public string cardText;
 
     public MinionEffect[] effects;
 
@@ -27,6 +28,8 @@ public class CardModel
         at = cardEntity.At;
         cost = cardEntity.Cost;
         icon = cardEntity.Icon;
+
+        cardText = cardEntity.CardText;
 
         cardType = cardEntity.CardType;
 

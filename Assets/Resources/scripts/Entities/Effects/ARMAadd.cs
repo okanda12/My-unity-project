@@ -16,11 +16,11 @@ public class ARMAadd : MinionEffect
     {
         ARMAdev = GameObject.Find("ARMAdevice(Clone)");
 
-        Debug.Log(ARMAdev);
+        //Debug.Log(ARMAdev);
         ARMAdevice ARMAdev_script = ARMAdev.GetComponent<ARMAdevice>();
 
 
-        Debug.Log(ARMAdev_script);
+        //Debug.Log(ARMAdev_script);
         ARMAdev_script.AddCost(addAmount);
 
         //BattleManager.Instance.manasys.AddEmptyMana(RestoreAmount);

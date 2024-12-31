@@ -10,6 +10,7 @@ public class ARMAmagic:ScriptableObject,ICard
     public int cost;
     public Sprite icon;
     public string cardType="Magic";
+    public string cardText;
 
     public MinionEffect[] effects;
 
@@ -38,6 +39,8 @@ public class ARMAmagic:ScriptableObject,ICard
     public Sprite Icon => icon;  // ƒAƒCƒRƒ“
 
     public string CardType => cardType;
+
+    public string CardText => cardText;
 
     public MinionEffect[] minioneffect =>effects;
 

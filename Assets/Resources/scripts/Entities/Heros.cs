@@ -11,7 +11,7 @@ public class Heros : ScriptableObject,ICard
     public int at;
     public Sprite icon;
     public string cardType = "Hero";
-
+    public string cardText;
     public MinionEffect[] effects;
 
 
@@ -41,7 +41,7 @@ public class Heros : ScriptableObject,ICard
 
     public int Cost => 0;
     public Sprite Icon => icon;
-
+    public string CardText => cardText;
     public string CardType => cardType;
 
 

@@ -15,6 +15,8 @@ public interface ICard
     int Cost { get; }
     Sprite Icon { get; }
 
+    string CardText { get; }
+
     string CardType { get; }
 
     MinionEffect[] minioneffect {get;}

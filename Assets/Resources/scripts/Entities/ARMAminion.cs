@@ -14,6 +14,8 @@ public class ARMAminion:ScriptableObject, ICard
     public Sprite icon;
     public string cardType="Minion";
 
+    public string cardText;
+
     public MinionEffect[] effects;//ミニオンの効果
 
 
@@ -40,6 +42,7 @@ public class ARMAminion:ScriptableObject, ICard
     public int Cost => cost;  // コスト
     public Sprite Icon => icon;  // アイコン
 
+    public string CardText => cardText;
     public string CardType => cardType;
 
     public MinionEffect[] minioneffect => effects;

@@ -10,7 +10,7 @@ using TMPro;
 
 public class CardView : MonoBehaviour
 {
-    [SerializeField] TextMeshProUGUI nameText, hpText, atText, cosText;
+    [SerializeField] TextMeshProUGUI nameText, hpText, atText, cosText,cardText;
     [SerializeField] Image iconImage;
     [SerializeField] Image waku;
     [SerializeField] Image Dot;
@@ -18,16 +18,23 @@ public class CardView : MonoBehaviour
     [SerializeField] Image Heart;
     [SerializeField] Image Sword;
 
+ 
+
 
 
     public void Show(CardModel cardModel)
     {
+        if (string.IsNullOrEmpty(cardModel.cardText))
+        {
+            cardModel.cardText = " ";
+        }
 
         if (cardModel.cardType=="Hero")
         {
             nameText.text = null;
             hpText.text = cardModel.hp.ToString();
             atText.text = cardModel.at.ToString();
+            //cardText.text = cardModel.cardText;
             Dot.enabled = false;
             cosText.text = null;
             iconImage.sprite = cardModel.icon;
@@ -62,6 +69,7 @@ public class CardView : MonoBehaviour
             nameText.text = cardModel.name;
             hpText.text = cardModel.hp.ToString();
             atText.text = cardModel.at.ToString();
+            cardText.text = cardModel.cardText;
             cosText.text = cardModel.cost.ToString();
             iconImage.sprite = cardModel.icon;
 
@@ -103,9 +111,11 @@ public class CardView : MonoBehaviour
         }
         else if (cardModel.cardType == "Magic")
         {
+
             //魔法カードの場合はhp,atなどがいらないので削除しています
             waku.sprite = frame.Magicframe;
             nameText.text = cardModel.name;
+            cardText.text = cardModel.cardText;
 
             hpText.text = null;
             atText.text = null;

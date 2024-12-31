@@ -74,7 +74,7 @@ public class CardAttackAnimation : MonoBehaviour
         TextMeshProUGUI Damagetext = Attackedtext.GetComponentInChildren<TextMeshProUGUI>();
 
 
-        Damagetext.text = damage.ToString();
+        Damagetext.text = "-"+ damage.ToString();
 
         GameObject Damagetextobject = Instantiate(Attackedtext, HeartPosition, false);
 
@@ -159,7 +159,7 @@ public class CardAttackAnimation : MonoBehaviour
 
 
                   //èüé“ÇÃñºëOéÊìæ
-                  ;
+                  
 
                     BattleManager.Instance.Result();
 
@@ -296,7 +296,7 @@ public class CardAttackAnimation : MonoBehaviour
 
 
 
-        Debug.Log($"startPosition:{startPosition},endPosition:{endPosition}");
+        //Debug.Log($"startPosition:{startPosition},endPosition:{endPosition}");
 
 
         //identityEuler(0, 0, -45)
@@ -366,5 +366,13 @@ public class CardAttackAnimation : MonoBehaviour
         fromCard.canAttack = false;
         View.Show(Model);
 
+
+
     }
+
+
+
+
+
+
 }

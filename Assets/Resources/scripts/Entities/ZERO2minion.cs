@@ -13,6 +13,8 @@ public class ZERO2minion : ScriptableObject, ICard
     public int cost;
     public Sprite icon;
     public string cardType = "Minion";
+
+    public string cardText;
     public MinionEffect[] effects;
 
     public int GetCardID()
@@ -37,7 +39,7 @@ public class ZERO2minion : ScriptableObject, ICard
     public int At => at;  // 攻撃力もどうよう
     public int Cost => cost;  // コスト
     public Sprite Icon => icon;  // アイコン
-
+    public string CardText => cardText;
     public string CardType => cardType;
 
     public MinionEffect[] minioneffect => effects;

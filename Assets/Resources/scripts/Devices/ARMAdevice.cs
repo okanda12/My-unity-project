@@ -52,13 +52,13 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
     public float rotationDuration;
     private bool deviceGO = false;
-    
+    GameObject canvas2;
 
 
     public override void Initialize()
     {
         
-
+       
         currentCost = 0;
     }
 
@@ -66,11 +66,15 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
     {
         ARMAtext.gameObject.SetActive(false);//初期状態でテキストは非表示とします.
         slider.value = 0;
+        canvas2 = GameObject.Find("Canvas2");
     }
 
-    
-    //
     public void AddCost(int cost)
+    {
+        StartCoroutine(AddCoster(cost));
+    }
+    //
+    public IEnumerator AddCoster(int cost)
     {
         currentCost += cost;
         Debug.Log($"Cost added: {cost}. Current cost: {currentCost}/{rewardCost}");
@@ -81,24 +85,156 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
         StartCoroutine(kurukurumotion(cost));//コストが飛んでいきます
 
 
-        if (currentCost >= rewardCost　&& Activated_Anim==false)
+
+        while (BattleManager.Instance.isAnimating) {
+            
+            yield return null;
+        }
+
+        if (Activated_Anim == true)
         {
 
-            StartCoroutine(ActivatedAnim());
-           
-            currentCost = 0;//リセット
+            StartCoroutine(cupinAnim());
 
-            Activated_Anim = true;//trueにしておけばアニメーションは再び始まらない
+            StartCoroutine(Revolution(cost));
+
+            yield return new WaitForSeconds(0.23f);
+
+        }
+
+        if (currentCost >= rewardCost && Activated_Anim == false)
+        {
+            Activated_Anim = true;
+            yield return StartCoroutine(ActivatedAnim());
+
+            //currentCost = 0;//リセット
+
+            //trueにしておけばアニメーションは再び始まらない
 
 
         }
 
+
+        yield return null;
         slider.value = (float)currentCost/(float)rewardCost;//スライダー更新
-        Debug.Log($"ARMA slider.value{slider.value}warizan{currentCost / rewardCost}");
+        //Debug.Log($"ARMA slider.value{slider.value}warizan{currentCost / rewardCost}");
 
     }
 
-    public IEnumerator kurukurumotion(int cost)
+
+    //せんぷうきが回るごとにそのぶん相手にダメージを与えます.
+
+    public IEnumerator Revolution(int cost)
+    {
+
+        Transform field = BattleManager.Instance.EnemyFieldTransform;
+        Transform EnemyHERO = BattleManager.Instance.EnemyHEROfield;
+
+
+        Debug.Log($"ARMA added {cost}");
+        for (int i=0;i<cost;i++)
+        {
+
+            
+            //ミニオンとヒーろーのダメージアニメーションを引っ張ってきます.
+
+            List <CardAttackAnimation> cardATanim=new List<CardAttackAnimation>();
+            foreach (Transform daiza in field)
+            {
+                CardAttackAnimation[] anims = daiza.GetComponentsInChildren<CardAttackAnimation>();
+                cardATanim.AddRange(anims);
+            }
+
+
+            cardATanim.Add(EnemyHERO.GetComponentInChildren<CardAttackAnimation>());
+
+
+            Debug.Log(cardATanim);
+            Debug.Log($" cardATanim {cardATanim.Count}");
+            
+
+            //ランダムにひとつ選びます
+            int randomIndex = Random.Range(0, cardATanim.Count);
+            CardAttackAnimation randomAnim = cardATanim[randomIndex];
+
+            Debug.Log($"Randomly selected CardAttackAnimation: {randomAnim.name}");
+
+
+            
+
+            Debug.Log($"i={i}");
+
+
+            
+            yield return StartCoroutine(singleSpreadWing(randomAnim.GetComponent<Transform>()));
+
+            if (randomAnim)//無かった場合,他のに回す処理も描きたい
+            {
+                randomAnim.StartCoroutine(randomAnim.GetDamage(1));
+            }
+            
+            yield return new WaitForSeconds(0.1f);
+
+        }
+
+
+
+        
+
+
+
+
+
+
+    }
+
+
+    //Activated後にだけ使うものです.壱円
+    public IEnumerator singleSpreadWing(Transform targetTrans)
+    {
+
+        Vector3 screenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, targetTrans.position);
+        
+        Vector3 startPosition = this.transform.position;
+        GameObject wing_damage=Instantiate(wing_prefab, canvas2.transform);
+
+
+        wing_damage.transform.position = screenPos;
+       // wing_damage.transform.localPosition = startPosition;
+
+        float elapsedTime=0f;
+        float t;
+        float Duration=0.3f;
+
+        wing_damage.transform.localScale = new Vector3(1.3f, 1.3f, 1.3f);
+
+        while (elapsedTime<Duration)
+        {
+            if (targetTrans == null)
+            {
+                Debug.LogWarning("Target transform has been destroyed. Ending animation.");
+                break; // アニメーションを終了
+            }
+            elapsedTime += Time.deltaTime;
+            t = elapsedTime / Duration;
+
+            wing_damage.transform.position = Vector3.Lerp(startPosition, targetTrans.position, t);
+           
+            yield return null;
+
+        }
+        
+
+        
+       Destroy(wing_damage);
+        
+
+
+    }
+
+
+        //カードを使うたびにデバイスの上にせんぷうきのエフェクトが飛びます
+        public IEnumerator kurukurumotion(int cost)
     {
         GameObject kurukuru_object = Instantiate(kurukuru,transform);
         Vector3 StartPosition = this.transform.position;
@@ -253,6 +389,7 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
     public IEnumerator ConvergeWing()
     {
         Vector3 startScale = Wing_pivot.localScale;
+        Vector3 endScale = new Vector3(0.1f, 0.1f, 0.1f);
 
 
         float elapsedTime = 0f;
@@ -264,7 +401,7 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
             elapsedTime += Time.deltaTime;
             t = elapsedTime / MoonSpreadDuration;
 
-            Wing_pivot.localScale = Vector3.Lerp(startScale, new Vector3(0.1f, 0.1f, 0.1f), t * t);
+            Wing_pivot.localScale = Vector3.Lerp(startScale, endScale, t * t);
             Wing_pivot.localRotation = Quaternion.Euler(0f, 0f, 360 * t);
 
             yield return null;
@@ -273,6 +410,11 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
 
         Wing_pivot.gameObject.SetActive(false);
+
+        foreach (Transform child in Wing_pivot)
+        {
+            Destroy(child.gameObject);
+        }
 
 
 
@@ -315,7 +457,7 @@ public class ARMAdevice :Herodevices,IPointerEnterHandler,IPointerExitHandler
 
         while (!deviceGO)
         {
-            Debug.Log(ARMA_device.localPosition);
+            //Debug.Log(ARMA_device.localPosition);
 
 
             elapsedTime += Time.deltaTime;

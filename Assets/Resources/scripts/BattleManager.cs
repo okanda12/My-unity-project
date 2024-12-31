@@ -158,15 +158,18 @@ public class BattleManager : MonoBehaviour
 
         if (YES == true)
         {
+
             foreach (var card in EnemyFieldcardList)
             {
                 CardHighlightController cardhighlight = card.GetComponent<CardHighlightController>();
                 cardhighlight.ShowRedHighlight();
                 //Debug.Log($"Card Name: {card.name}, ATK: {card.model.at}, HP: {card.model.hp}");
             }
+
         }
         else
         {
+
             foreach (var card in EnemyFieldcardList)
             {
                 CardHighlightController cardhighlight = card.GetComponent<CardHighlightController>();
@@ -194,6 +197,8 @@ public class BattleManager : MonoBehaviour
 
                 Debug.Log("攻撃者カード選択:" + selectedCard.model.name);//お名前を取得
                 EnemyFieldHighlight(true);//敵のフィールドのミニオンにハイライトを付けます.
+
+
             }
             else
             {
@@ -504,7 +509,7 @@ public class BattleManager : MonoBehaviour
 
                     if (card.canAttack == true)
                     {
-                        Debug.Log($"PLfieldCC{PLfieldCC},PLfieldCC.length{PLfieldCC.Length}");
+                        //Debug.Log($"PLfieldCC{PLfieldCC},PLfieldCC.length{PLfieldCC.Length}");
                         if (PLfieldCC.Length > 0)
                         {
                             CardController EnemyCard = PLfieldCC[0];//いちばん端っこの敵(味方)を攻撃

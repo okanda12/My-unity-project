@@ -19,7 +19,11 @@ public class ReverseStatsAnim : MonoBehaviour
 
     public IEnumerator ReverseStats()
     {
+
+
         CardController cardCon = this.GetComponent<CardController>();
+
+        
 
         float elapsedTime = 0f;
 
@@ -40,7 +44,10 @@ public class ReverseStatsAnim : MonoBehaviour
             AtText.rotation = Quaternion.identity;
 
 
-
+            if (this == null)
+            {
+                break;
+            }
 
             yield return null;
         }

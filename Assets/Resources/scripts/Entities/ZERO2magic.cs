@@ -11,7 +11,7 @@ public class ZERO2magic : ScriptableObject, ICard
     public int cost;
     public Sprite icon;
     public string cardType = "Magic";
-
+    public string cardText;
     public MinionEffect[] effects;
 
     public int GetCardID()
@@ -36,7 +36,7 @@ public class ZERO2magic : ScriptableObject, ICard
     public int At => 0;  // 攻撃力もどうよう
     public int Cost => cost;  // コスト
     public Sprite Icon => icon;  // アイコン
-
+    public string CardText => cardText;
     public string CardType => cardType;
 
     public MinionEffect[] minioneffect => effects;
